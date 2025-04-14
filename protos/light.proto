@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package light;
+
+service LightService {
+    rpc GetLight (LightRequest) returns (LightResponse);
+}
+
+message LightRequest {
+    int32 id = 1;
+}
+
+message LightResponse {
+    int32 id = 1;
+    string name = 2;
+    string color = 3;
+}

@@ -3,7 +3,7 @@ syntax = "proto3";
 package climate;
 
 service ClimateService{
-    rpc InitializeService(ClimateRequest) returns (ClimateResponse);
+    rpc DiscoverService(ClimateRequest) returns (ClimateResponse);
 }
 
 message ClimateRequest{

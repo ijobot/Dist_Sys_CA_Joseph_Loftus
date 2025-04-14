@@ -3,14 +3,15 @@ syntax = "proto3";
 package security;
 
 service SecurityService{
-    rpc InitializeService(SecurityMessage) returns (SecurityResponse);
+    rpc GetSecurity(SecurityRequest) returns (SecurityResponse);
 }
 
-message SecurityMessage{
-    string user = 1;     
-    string message = 2;
+message SecurityRequest{
+    int32 ID = 1;
 }
 
 message SecurityResponse{
-    string response = 1;     
+    int32 ID = 1;
+    string name = 2;
+    float price = 3;     
 }

@@ -6,7 +6,7 @@ const SECURITY_PROTO_PATH = path.join(__dirname, "../protos/security.proto");
 const definition = protoLoader.loadSync(SECURITY_PROTO_PATH);
 const securityProto = grpc.loadPackageDefinition(definition).security;
 
-const initializeService = (call, callback) => {
+const discoverService = (call, callback) => {
   console.log(
     `Received message from ${call.request.user}: ${call.request.message}`
   );
@@ -18,13 +18,12 @@ const initializeService = (call, callback) => {
 
 const server = new grpc.Server();
 server.addService(securityProto.SecurityService.service, {
-  InitializeService: initializeService,
+  DiscoverService: discoverService,
 });
 server.bindAsync(
-  "127.0.0.1:50052",
+  "127.0.0.1:50053",
   grpc.ServerCredentials.createInsecure(),
   () => {
     console.log("Security Service is running!");
-    server.start();
   }
 );

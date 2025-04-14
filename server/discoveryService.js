@@ -7,12 +7,12 @@ const definition = protoLoader.loadSync(DISCOVERY_PROTO_PATH);
 const discoveryProto = grpc.loadPackageDefinition(definition).discovery;
 
 const services = {
-  lightingService: "localhost:50051",
-  securityService: "localhost:50052",
-  climateService: "localhost:50053",
+  climateService: "localhost:50051",
+  lightService: "localhost:50052",
+  securityService: "localhost:50053",
 };
 
-const initializeService = (call, callback) => {
+const discoverService = (call, callback) => {
   const serviceName = call.request.serviceName;
   const address = services[serviceName];
 
@@ -27,14 +27,13 @@ const initializeService = (call, callback) => {
 };
 
 const server = new grpc.Server();
-server.addService(discoveryProto.InitializeService.service, {
-  InitializeService: initializeService,
+server.addService(discoveryProto.DiscoveryService.service, {
+  DiscoverService: discoverService,
 });
 server.bindAsync(
   "127.0.0.1:50050",
   grpc.ServerCredentials.createInsecure(),
   () => {
     console.log("Discovery Service is running!");
-    server.start();
   }
 );

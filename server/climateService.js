@@ -6,7 +6,7 @@ const CLIMATE_PROTO_PATH = path.join(__dirname, "../protos/climate.proto");
 const definition = protoLoader.loadSync(CLIMATE_PROTO_PATH);
 const climateProto = grpc.loadPackageDefinition(definition).climate;
 
-const initializeService = (call, callback) => {
+const discoverService = (call, callback) => {
   console.log(
     `Received message from ${call.request.user}: ${call.request.message}`
   );
@@ -18,13 +18,12 @@ const initializeService = (call, callback) => {
 
 const server = new grpc.Server();
 server.addService(climateProto.ClimateService.service, {
-  InitializeService: initializeService,
+  DiscoverService: discoverService,
 });
 server.bindAsync(
-  "127.0.0.1:50053",
+  "127.0.0.1:50051",
   grpc.ServerCredentials.createInsecure(),
   () => {
     console.log("Climate Service is running!");
-    server.start();
   }
 );
