@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package security;
+
+service SecurityService{
+    // Bi-directional Service
+    rpc SendMessage(SecurityMessage) returns (SecurityResponse);
+}
+
+message SecurityMessage{
+    string user = 1;     
+    string message = 2;
+}
+
+message SecurityResponse{
+    string response = 1;     
+}

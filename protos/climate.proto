@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package climate;
+
+service ClimateService{
+    rpc SendMessage(ClimateRequest) returns (ClimateResponse);
+}
+
+message ClimateRequest{
+    string message = 1;
+    string user = 2;
+}
+
+message ClimateResponse{
+    string response = 1;
+}
+
