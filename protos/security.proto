@@ -3,8 +3,7 @@ syntax = "proto3";
 package security;
 
 service SecurityService{
-    // Bi-directional Service
-    rpc SendMessage(SecurityMessage) returns (SecurityResponse);
+    rpc InitializeService(SecurityMessage) returns (SecurityResponse);
 }
 
 message SecurityMessage{

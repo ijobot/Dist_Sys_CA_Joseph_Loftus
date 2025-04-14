@@ -2,38 +2,15 @@ syntax = "proto3";
 
 package lighting;
 
-service LightService{
-    rpc switchLight(LightOnOffRequest) returns (LightOnOffResponse);
-    rpc updateLight(LightSettingRequest) returns (LightSettingResponse);
-    rpc turnAllLightsOn(FullAreaLightRequest) returns (FullAreaLightResponse);
+service LightingService{
+    rpc InitializeService(LightingMessage) returns (LightingResponse);
 }
 
-message LightOnOffRequest{
-    string areaName = 1;     // "Main Entrance" or "Staff Kitchen"
-    int32 bulbID = 2;        // each bulb or LED strip has its own unique ID
-    bool turnedOn = 3;       // each bulb can be turned on (true) or off (false)
+message LightingMessage{
+    string user = 1;     
+    string message = 2;   
 }
 
-message LightOnOffResponse{
-    string response = 1;     // "Light 44 in Meeting Room 2 has been turned on."
-}
-
-message LightSettingRequest{
-    string areaName = 1;     // "Main Entrance" or "Staff Kitchen"
-    int32 bulbID = 2;        // each bulb or LED strip has its own unique ID
-    int32 temp = 3;          // each bulb's warmth/coolness can be set (from 2000k-8000k)
-    string color = 4;        // each bulb's color can be set (hex code)
-}
-
-message LightSettingResponse{
-    string response = 1;     // "Light 23 in Office 11 has been set to cool blue."
-}
-
-message FullAreaLightRequest{
-    string areaName = 1;     // "Main Entrance" or "Staff Kitchen"
-    bool turnedOn = 2;       // all bulbs can be turned on (true) or off (false)
-}
-
-message FullAreaLightResponse{
-    string response = 1;     // "All lights in Main Entrance have been turned on."
+message LightingResponse{
+    string response = 1;     
 }
