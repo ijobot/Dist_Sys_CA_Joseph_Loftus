@@ -48,8 +48,5 @@ const test = () => {
 };
 
 module.export = {
-  //   getProductInfo,
-  //   getOrderInfo,
-  //   sendChatMessage,
   test,
 };
