@@ -3,27 +3,19 @@ const path = require("path");
 const client = require("./client");
 
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
-app.get("/", (request, response) => {
-  const productID = 1;
+app.get("/", (req, res) => {
+  client.test();
 
-  client.discoveryService("lightService", (lightService) => {
-    client.getProductInfo(productID, (product) => {
-      if (!product) {
-        response.send("Product not found!");
-        return;
-      }
-      87;
-    });
-  });
+  res.render("index", {});
 });
 
-app.listen(port, () => {
-  console.log("Client is running!");
+app.listen(PORT, () => {
+  console.log(`Client GUI is running at http://localhost:${PORT}`);
 });

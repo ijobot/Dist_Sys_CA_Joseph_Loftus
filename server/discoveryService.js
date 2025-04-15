@@ -12,7 +12,7 @@ const services = {
   securityService: "localhost:50053",
 };
 
-const discoverService = (call, callback) => {
+const discover = (call, callback) => {
   const serviceName = call.request.serviceName;
   const address = services[serviceName];
 
@@ -28,7 +28,7 @@ const discoverService = (call, callback) => {
 
 const server = new grpc.Server();
 server.addService(discoveryProto.DiscoveryService.service, {
-  DiscoverService: discoverService,
+  Discover: discover,
 });
 server.bindAsync(
   "127.0.0.1:50050",

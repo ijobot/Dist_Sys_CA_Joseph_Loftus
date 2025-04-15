@@ -3,7 +3,7 @@ syntax = "proto3";
 package light;
 
 service LightService {
-    rpc GetLight (LightRequest) returns (LightResponse);
+    rpc GetLight(LightRequest) returns (LightResponse);
 }
 
 message LightRequest {

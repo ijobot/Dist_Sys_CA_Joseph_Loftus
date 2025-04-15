@@ -3,7 +3,7 @@ syntax = "proto3";
 package discovery;
 
 service DiscoveryService{
-    rpc DiscoverService(DiscoveryRequest) returns (DiscoveryResponse);
+    rpc Discover(DiscoveryRequest) returns (DiscoveryResponse);
 }
 
 message DiscoveryRequest{
