@@ -2,6 +2,9 @@ syntax = "proto3";
 
 package climate;
 
+// Streaming Service
+// Will use streamed inputs of weather conditions every 30 minutes to then update the internal office climate.
+
 service ClimateService{
     rpc GetClimate(ClimateRequest) returns (ClimateResponse);
 }

@@ -2,6 +2,9 @@ syntax = "proto3";
 
 package light;
 
+// Unary Service
+// Simple service that accepts requests based on various lighting functionality.
+
 service LightService {
     rpc GetLight(LightRequest) returns (LightResponse);
 }

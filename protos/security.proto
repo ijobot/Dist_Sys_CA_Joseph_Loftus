@@ -2,6 +2,9 @@ syntax = "proto3";
 
 package security;
 
+// Bi-Directional Service
+// Will ask users security questions and accept responses to be checked.
+
 service SecurityService{
     rpc GetSecurity(SecurityRequest) returns (SecurityResponse);
 }

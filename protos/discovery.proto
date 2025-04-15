@@ -2,6 +2,9 @@ syntax = "proto3";
 
 package discovery;
 
+// Control Service
+// Will inject other services within the system.
+
 service DiscoveryService{
     rpc Discover(DiscoveryRequest) returns (DiscoveryResponse);
 }
