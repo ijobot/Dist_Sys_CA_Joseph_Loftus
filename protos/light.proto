@@ -2,19 +2,64 @@ syntax = "proto3";
 
 package light;
 
-// Unary Service
+// Unary Service & Client-side Service
 // Simple service that accepts requests based on various lighting functionality.
 
 service LightService {
+    // Unary functions:
+    rpc GetRoomLights(RoomLightsRequest) returns (RoomLightsResponse);
     rpc GetLight(LightRequest) returns (LightResponse);
+    rpc SetLight(SetLightRequest) returns (LightResponse);
+
+    // Client-side functions:
+    rpc SetRoomLights(stream SetRoomLightsRequest) returns (RoomLightsResponse);
 }
 
-message LightRequest {
+// Light object, which will be used in several functions.
+message Light{
+    int32 id = 1;
+    string room = 2;
+    int32 brightness = 3;
+    string color = 4;
+}
+
+//
+// Unary functionality:
+//
+
+// User enters a room to see which lights are located within.
+message RoomLightsRequest{
+    string room = 1;
+}
+
+// User selects a specific light to access.
+message LightRequest{
     int32 id = 1;
 }
 
-message LightResponse {
+// User selects values to set.
+message SetLightRequest{
     int32 id = 1;
-    string name = 2;
+    string brightness = 2;
     string color = 3;
 }
+
+// Service returns an array of lights in the form of repeated Light items.
+message RoomLightsResponse{
+    repeated Light lights = 1;
+}
+
+// Service returns a specific light and shows its ID, location, and current brightness and color settings.
+message LightResponse{
+    Light light = 1;
+}
+
+//
+// Client-side functionality (input stream):
+//
+
+// User inputs several lights to change at once.
+message SetRoomLightsRequest{
+    Light light = 1;
+}
+

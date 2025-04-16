@@ -2,19 +2,19 @@ syntax = "proto3";
 
 package security;
 
-// Bi-Directional Service
+// Bidirectional Service
 // Will ask users security questions and accept responses to be checked.
 
 service SecurityService{
-    rpc GetSecurity(SecurityRequest) returns (SecurityResponse);
+    rpc AskSecurityQuestion(stream SecurityRequest) returns (stream SecurityResponse);
 }
 
 message SecurityRequest{
-    int32 ID = 1;
+    int32 id = 1;
+    string question = 2;
 }
 
 message SecurityResponse{
-    int32 ID = 1;
-    string name = 2;
-    float price = 3;     
+    int32 id = 1;
+    string answer = 2;
 }
