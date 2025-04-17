@@ -6,12 +6,11 @@ package security;
 // Will ask users security questions and accept responses to be checked.
 
 service SecurityService{
-    rpc AskSecurityQuestion(stream SecurityRequest) returns (stream SecurityResponse);
+    rpc AskSecurityQuestion(SecurityRequest) returns (SecurityResponse);
 }
 
 message SecurityRequest{
-    int32 id = 1;
-    string question = 2;
+    string question = 1;
 }
 
 message SecurityResponse{

@@ -11,11 +11,36 @@ const client = new lightProto.LightService(
   grpc.credentials.createInsecure()
 );
 
-const lightId = 1;
+const lightId = 12;
 client.GetLight({ id: lightId }, (error, response) => {
   if (error) {
     console.error("Error:", error);
   } else {
-    console.log("Light details:", response);
+    console.log(
+      `
+      LIGHT DETAILS 
+      id:         ${response.id}
+      room:       ${response.room}
+      brightness: ${response.brightness}
+      color:      ${response.color}
+      `
+    );
   }
 });
+
+// const room = "conference";
+// client.getRoomLights({ room: room }, (error, response) => {
+//   if (error) {
+//     console.error("Error:", error);
+//   } else {
+//     console.log(`The room ${room} has the following lights in it: ${response}`);
+//   }
+// });
+
+// const call = client.getRoomLights({ room: room });
+// call.on("data", (light) => {
+//   console.log("HI JOE WORKING");
+// });
+// call.on("end", () => {
+//   console.log("Server done.");
+// });

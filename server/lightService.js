@@ -30,66 +30,69 @@ const getLight = (call, callback) => {
   } else {
     callback({
       code: grpc.status.NOT_FOUND,
-      details: "Light not found",
+      details: "Light not found.",
     });
   }
 };
 
-const getRoomLights = (call, callback) => {
-  const roomlights = lights.filter((light) => light.room !== call.request.room);
-  if (roomlights) {
-    callback(null, roomlights);
-  } else {
-    callback({
-      code: grpc.status.NOT_FOUND,
-      details: "Room not found",
-    });
-  }
-};
+// const getRoomLights = (call, callback) => {
+//   const roomlights = lights.filter((light) => light.room === call.request.room);
+//   if (roomlights) {
+//     call.write(roomlights);
+//     call.end();
+//   } else {
+//     callback({
+//       code: grpc.status.NOT_FOUND,
+//       details: "Room not found",
+//     });
+//   }
+// };
 
-const setLight = (call, callback) => {
-  const light = lights.find((light) => light.id === call.request.id);
-  if (light) {
-    light.brightness = call.request.brightness;
-    light.color = call.request.color;
-    const confirmationMessage = `Light ${light.id} has been set to brightness: ${light.brightness} and color: ${light.color}.`;
-    callback(null, { confirmationMessage });
-  } else {
-    callback({
-      code: grpc.status.NOT_FOUND,
-      details: "There was a problem.  Light has not been set.",
-    });
-  }
-};
+// const setLight = (call, callback) => {
+//   const light = lights.find((light) => light.id === call.request.id);
+//   if (light) {
+//     light.brightness = call.request.brightness;
+//     light.color = call.request.color;
+//     const confirmationMessage = `Light ${light.id} has been set to brightness: ${light.brightness} and color: ${light.color}.`;
+//     callback(null, { confirmationMessage });
+//   } else {
+//     callback({
+//       code: grpc.status.NOT_FOUND,
+//       details: "There was a problem.  Light has not been set.",
+//     });
+//   }
+// };
 
-const setRoomLights = (call, callback) => {
-  const roomlights = lights.filter((light) => light.room !== call.request.room);
-  if (roomlights) {
-    roomlights.forEach((rm) => {
-      (rm.brightness = call.request.brightness),
-        (rm.color = call.request.color);
-    });
-    const confirmationMessage = `All lights in room ${call.request.room} have been set to brightness: ${light.brightness} and color: ${light.color}.`;
-    callback(null, confirmationMessage);
-  } else {
-    callback({
-      code: grpc.status.NOT_FOUND,
-      details: "Room not found",
-    });
-  }
-};
+// const setRoomLights = (call, callback) => {
+//   const roomlights = lights.filter((light) => light.room !== call.request.room);
+//   if (roomlights) {
+//     roomlights.forEach((rm) => {
+//       (rm.brightness = call.request.brightness),
+//         (rm.color = call.request.color);
+//     });
+//     const confirmationMessage = `All lights in room ${call.request.room} have been set to brightness: ${light.brightness} and color: ${light.color}.`;
+//     callback(null, confirmationMessage);
+//   } else {
+//     callback({
+//       code: grpc.status.NOT_FOUND,
+//       details: "Room not found",
+//     });
+//   }
+// };
 
 const server = new grpc.Server();
 server.addService(lightProto.LightService.service, {
   GetLight: getLight,
-  GetRoomLights: getRoomLights,
-  SetLight: setLight,
-  SetRoomLights: setRoomLights,
+  // GetRoomLights: getRoomLights,
+  // SetLight: setLight,
+  // SetRoomLights: setRoomLights,
 });
+
+const PORT = "50052";
 server.bindAsync(
-  "127.0.0.1:50052",
+  `localhost:${PORT}`,
   grpc.ServerCredentials.createInsecure(),
   () => {
-    console.log("Light Service is running!");
+    console.log(`Light Service is running on localhost:${PORT}`);
   }
 );

@@ -7,12 +7,14 @@ package light;
 
 service LightService {
     // Unary functions:
-    rpc GetRoomLights(RoomLightsRequest) returns (RoomLightsResponse);
     rpc GetLight(LightRequest) returns (LightResponse);
     rpc SetLight(SetLightRequest) returns (LightResponse);
 
+    // Server-side functions:
+    rpc GetRoomLights(RoomLightsRequest) returns (stream RoomLightsResponse);
+
     // Client-side functions:
-    rpc SetRoomLights(stream SetRoomLightsRequest) returns (RoomLightsResponse);
+    // rpc SetRoomLights(stream SetRoomLightsRequest) returns (something);
 }
 
 // Light object, which will be used in several functions.
@@ -44,14 +46,17 @@ message SetLightRequest{
     string color = 3;
 }
 
-// Service returns an array of lights in the form of repeated Light items.
+// Service streams an array of all Light items in the given room.
 message RoomLightsResponse{
-    repeated Light lights = 1;
+    Light light = 1;
 }
 
 // Service returns a specific light and shows its ID, location, and current brightness and color settings.
 message LightResponse{
-    Light light = 1;
+    int32 id = 1;
+    string room = 2;
+    int32 brightness = 3;
+    string color = 4;
 }
 
 //
