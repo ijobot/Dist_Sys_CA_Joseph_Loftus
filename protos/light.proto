@@ -42,13 +42,16 @@ message LightRequest{
 // User selects values to set.
 message SetLightRequest{
     int32 id = 1;
-    string brightness = 2;
+    int32 brightness = 2;
     string color = 3;
 }
 
 // Service streams an array of all Light items in the given room.
 message RoomLightsResponse{
-    Light light = 1;
+    int32 id = 1;
+    string room = 2;
+    int32 brightness = 3;
+    string color = 4;
 }
 
 // Service returns a specific light and shows its ID, location, and current brightness and color settings.

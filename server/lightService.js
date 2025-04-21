@@ -35,33 +35,31 @@ const getLight = (call, callback) => {
   }
 };
 
-// const getRoomLights = (call, callback) => {
-//   const roomlights = lights.filter((light) => light.room === call.request.room);
-//   if (roomlights) {
-//     call.write(roomlights);
-//     call.end();
-//   } else {
-//     callback({
-//       code: grpc.status.NOT_FOUND,
-//       details: "Room not found",
-//     });
-//   }
-// };
+const getRoomLights = (call) => {
+  lights.forEach((light) => {
+    if (light.room === call.request.room) {
+      call.write(light);
+    }
+  });
+  call.end();
+};
 
-// const setLight = (call, callback) => {
-//   const light = lights.find((light) => light.id === call.request.id);
-//   if (light) {
-//     light.brightness = call.request.brightness;
-//     light.color = call.request.color;
-//     const confirmationMessage = `Light ${light.id} has been set to brightness: ${light.brightness} and color: ${light.color}.`;
-//     callback(null, { confirmationMessage });
-//   } else {
-//     callback({
-//       code: grpc.status.NOT_FOUND,
-//       details: "There was a problem.  Light has not been set.",
-//     });
-//   }
-// };
+const setLight = (call, callback) => {
+  const light = lights.find((light) => light.id === call.request.id);
+  console.log("HEY JOE WE ARE TRYING");
+  if (light) {
+    console.log("HEY JOE IT WORKED");
+    light.brightness = call.request.brightness;
+    light.color = call.request.color;
+    const confirmationMessage = `Light ${light.id} has been set to brightness: ${light.brightness} and color: ${light.color}.`;
+    callback(null, { confirmationMessage });
+  } else {
+    callback({
+      code: grpc.status.NOT_FOUND,
+      details: "There was a problem.  Light has not been set.",
+    });
+  }
+};
 
 // const setRoomLights = (call, callback) => {
 //   const roomlights = lights.filter((light) => light.room !== call.request.room);
@@ -83,8 +81,8 @@ const getLight = (call, callback) => {
 const server = new grpc.Server();
 server.addService(lightProto.LightService.service, {
   GetLight: getLight,
-  // GetRoomLights: getRoomLights,
-  // SetLight: setLight,
+  GetRoomLights: getRoomLights,
+  SetLight: setLight,
   // SetRoomLights: setRoomLights,
 });
 
