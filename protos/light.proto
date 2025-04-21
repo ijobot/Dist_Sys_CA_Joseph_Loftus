@@ -8,59 +8,75 @@ package light;
 service LightService {
     // Unary functions:
     rpc GetLight(LightRequest) returns (LightResponse);
-    rpc SetLight(SetLightRequest) returns (LightResponse);
+    rpc SetLight(SetLightRequest) returns (SetLightResponse);
 
     // Server-side functions:
     rpc GetRoomLights(RoomLightsRequest) returns (stream RoomLightsResponse);
 
     // Client-side functions:
-    // rpc SetRoomLights(stream SetRoomLightsRequest) returns (something);
+    rpc SetRoomLights(stream SetRoomLightsRequest) returns (SetRoomLightsResponse);
 }
+
+
+
 
 // Light object, which will be used in several functions.
 message Light{
-    int32 id = 1;
+    uint32 id = 1;
+    string room = 2;
+    uint32 brightness = 3;
+    string color = 4;
+}
+
+
+
+
+// User selects a specific light to access.
+message LightRequest{
+    uint32 id = 1;
+}
+
+// Service returns a specific light and shows its ID, location, and current brightness and color settings.
+message LightResponse{
+    uint32 id = 1;
     string room = 2;
     int32 brightness = 3;
     string color = 4;
 }
 
-//
-// Unary functionality:
-//
+
+
+// User selects values to set.
+message SetLightRequest{
+    uint32 id = 1;
+    uint32 brightness = 2;
+    string color = 3;
+}
+
+message SetLightResponse{
+    string confirmationMessage = 1;
+}
+
+
+
+
 
 // User enters a room to see which lights are located within.
 message RoomLightsRequest{
     string room = 1;
 }
 
-// User selects a specific light to access.
-message LightRequest{
-    int32 id = 1;
-}
 
-// User selects values to set.
-message SetLightRequest{
-    int32 id = 1;
-    int32 brightness = 2;
-    string color = 3;
-}
 
 // Service streams an array of all Light items in the given room.
 message RoomLightsResponse{
-    int32 id = 1;
+    uint32 id = 1;
     string room = 2;
-    int32 brightness = 3;
+    uint32 brightness = 3;
     string color = 4;
 }
 
-// Service returns a specific light and shows its ID, location, and current brightness and color settings.
-message LightResponse{
-    int32 id = 1;
-    string room = 2;
-    int32 brightness = 3;
-    string color = 4;
-}
+
 
 //
 // Client-side functionality (input stream):
@@ -69,5 +85,9 @@ message LightResponse{
 // User inputs several lights to change at once.
 message SetRoomLightsRequest{
     Light light = 1;
+}
+
+message SetRoomLightsResponse{
+    string confirmationMessage = 1;
 }
 

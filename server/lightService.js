@@ -46,12 +46,14 @@ const getRoomLights = (call) => {
 
 const setLight = (call, callback) => {
   const light = lights.find((light) => light.id === call.request.id);
-  console.log("HEY JOE WE ARE TRYING");
   if (light) {
-    console.log("HEY JOE IT WORKED");
     light.brightness = call.request.brightness;
     light.color = call.request.color;
-    const confirmationMessage = `Light ${light.id} has been set to brightness: ${light.brightness} and color: ${light.color}.`;
+    const confirmationMessage = `
+    LIGHT ${light.id} IN "${light.room.toUpperCase()}" HAS BEEN SET!
+    brightness: ${light.brightness}
+    color: ${light.color}
+    `;
     callback(null, { confirmationMessage });
   } else {
     callback({
@@ -61,29 +63,29 @@ const setLight = (call, callback) => {
   }
 };
 
-// const setRoomLights = (call, callback) => {
-//   const roomlights = lights.filter((light) => light.room !== call.request.room);
-//   if (roomlights) {
-//     roomlights.forEach((rm) => {
-//       (rm.brightness = call.request.brightness),
-//         (rm.color = call.request.color);
-//     });
-//     const confirmationMessage = `All lights in room ${call.request.room} have been set to brightness: ${light.brightness} and color: ${light.color}.`;
-//     callback(null, confirmationMessage);
-//   } else {
-//     callback({
-//       code: grpc.status.NOT_FOUND,
-//       details: "Room not found",
-//     });
-//   }
-// };
+const setRoomLights = (call, callback) => {
+  const roomlights = lights.filter((light) => light.room !== call.request.room);
+  if (roomlights) {
+    roomlights.forEach((rm) => {
+      (rm.brightness = call.request.brightness),
+        (rm.color = call.request.color);
+    });
+    const confirmationMessage = `All lights in room ${call.request.room} have been set to brightness: ${light.brightness} and color: ${light.color}.`;
+    callback(null, confirmationMessage);
+  } else {
+    callback({
+      code: grpc.status.NOT_FOUND,
+      details: "Room not found",
+    });
+  }
+};
 
 const server = new grpc.Server();
 server.addService(lightProto.LightService.service, {
   GetLight: getLight,
   GetRoomLights: getRoomLights,
   SetLight: setLight,
-  // SetRoomLights: setRoomLights,
+  SetRoomLights: setRoomLights,
 });
 
 const PORT = "50052";

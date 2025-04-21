@@ -52,23 +52,37 @@ const setLight = () => {
     readline.question("Please enter a brightness setting from 1-100: \n")
   );
   const setColor = readline.question("Please enter the color setting: \n");
-  const call = client.setLight({
-    id: 1,
-    brightness: 1,
-    color: "blue",
-  });
-  call.on("data", (light) => {
-    console.log("HEY JOE IT WORKED");
-  });
-  call.on("end", () => console.log("HEY JOE IT ENDED"));
+  client.setLight(
+    {
+      id: lightToSet,
+      brightness: setBrightness,
+      color: setColor,
+    },
+    (error, response) => {
+      if (error) {
+        console.error("Error:", error);
+      } else {
+        console.log(
+          `
+          ${response.confirmationMessage}
+          `
+        );
+      }
+    }
+  );
+};
+
+const setRoomLights = () => {
+  client.setRoomLights({});
 };
 
 function mainMenu() {
   console.log(
     `
     1. Get a single light by its ID.
-    2. Get all the lights in a particular room.
+    2. Get all the light IDs in a particular room.
     3. Adjust a single light's settings.
+    4. Adjust all lights in a particular room.
     `
   );
   const choice = parseInt(readline.question("Choose a function: \n"));
@@ -82,6 +96,9 @@ function mainMenu() {
       break;
     case 3:
       setLight();
+      break;
+    case 4:
+      setRoomLights();
       break;
     default:
       console.log("Please choose a function from 1 to 4.");
