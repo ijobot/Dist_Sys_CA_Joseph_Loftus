@@ -72,18 +72,43 @@ const setLight = () => {
   );
 };
 
-const setRoomLights = () => {
-  client.setRoomLights({});
+const setMultipleLights = () => {
+  const call = client.setMultipleLights((error, response) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log(response.confirmationMessage);
+    }
+  });
+  const brightness = parseInt(
+    readline.question(
+      "Please enter a brightness setting from 1-100 for multiple lights: \n"
+    )
+  );
+  const color = readline.question(
+    "Please enter a color setting for multiple lights: \n"
+  );
+
+  let addMore = true;
+  while (addMore) {
+    const id = parseInt(
+      readline.question("Please enter a light ID to add to the list. \n")
+    );
+    call.write({ id, brightness, color });
+    addMore = readline.keyInYNStrict("Add another? \n");
+  }
+  call.end();
 };
 
 function mainMenu() {
   console.log(
     `
-    1. Get a single light by its ID.
-    2. Get all the light IDs in a particular room.
-    3. Adjust a single light's settings.
-    4. Adjust all lights in a particular room.
-    `
+      1. Get a single light by its ID.
+      2. Get all the light IDs in a particular room.
+      3. Adjust a single light's settings.
+      4. Adjust all lights in a particular room.
+      5. Exit the Light Service.
+      `
   );
   const choice = parseInt(readline.question("Choose a function: \n"));
 
@@ -98,8 +123,10 @@ function mainMenu() {
       setLight();
       break;
     case 4:
-      setRoomLights();
+      setMultipleLights();
       break;
+    case 5:
+      return;
     default:
       console.log("Please choose a function from 1 to 4.");
   }

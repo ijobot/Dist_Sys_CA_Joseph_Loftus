@@ -14,7 +14,7 @@ service LightService {
     rpc GetRoomLights(RoomLightsRequest) returns (stream RoomLightsResponse);
 
     // Client-side functions:
-    rpc SetRoomLights(stream SetRoomLightsRequest) returns (SetRoomLightsResponse);
+    rpc SetMultipleLights(stream SetMultipleLightsRequest) returns (SetMultipleLightsResponse);
 }
 
 
@@ -83,11 +83,13 @@ message RoomLightsResponse{
 //
 
 // User inputs several lights to change at once.
-message SetRoomLightsRequest{
-    Light light = 1;
+message SetMultipleLightsRequest{
+    uint32 id = 1;
+    uint32 brightness = 2;
+    string color = 3;
 }
 
-message SetRoomLightsResponse{
+message SetMultipleLightsResponse{
     string confirmationMessage = 1;
 }
 

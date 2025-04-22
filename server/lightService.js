@@ -63,21 +63,22 @@ const setLight = (call, callback) => {
   }
 };
 
-const setRoomLights = (call, callback) => {
-  const roomlights = lights.filter((light) => light.room !== call.request.room);
-  if (roomlights) {
-    roomlights.forEach((rm) => {
-      (rm.brightness = call.request.brightness),
-        (rm.color = call.request.color);
-    });
-    const confirmationMessage = `All lights in room ${call.request.room} have been set to brightness: ${light.brightness} and color: ${light.color}.`;
-    callback(null, confirmationMessage);
-  } else {
-    callback({
-      code: grpc.status.NOT_FOUND,
-      details: "Room not found",
-    });
-  }
+const setMultipleLights = (call, callback) => {
+  const lightsToSet = [];
+  let setBrightness = 0;
+  let setColor = "white";
+
+  call.on("data", ({ id, brightness, color }) => {
+    lightsToSet.push(id);
+    setBrightness = brightness;
+    setColor = color;
+  });
+  call.on("end", () => {
+    const confirmationMessage = `Lights [${lightsToSet.join(
+      " "
+    )}] have all been set to brightness: ${setBrightness} and color: ${setColor.toUpperCase()}.`;
+    callback(null, { confirmationMessage });
+  });
 };
 
 const server = new grpc.Server();
@@ -85,7 +86,7 @@ server.addService(lightProto.LightService.service, {
   GetLight: getLight,
   GetRoomLights: getRoomLights,
   SetLight: setLight,
-  SetRoomLights: setRoomLights,
+  SetMultipleLights: setMultipleLights,
 });
 
 const PORT = "50052";
