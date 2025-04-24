@@ -2,71 +2,50 @@ syntax = "proto3";
 
 package light;
 
-// Unary Service & Client-side Service
-// Simple service that accepts requests based on various lighting functionality.
+// Unary, Server-side, and Client-side Service
+// Service that accepts requests based on various lighting functionality.
 
 service LightService {
     // Unary functions:
     rpc GetLight(LightRequest) returns (LightResponse);
     rpc SetLight(SetLightRequest) returns (SetLightResponse);
 
-    // Server-side functions:
+    // Server-side function:
     rpc GetRoomLights(RoomLightsRequest) returns (stream RoomLightsResponse);
 
-    // Client-side functions:
+    // Client-side function:
     rpc SetMultipleLights(stream SetMultipleLightsRequest) returns (SetMultipleLightsResponse);
 }
-
-
-
-
-// Light object, which will be used in several functions.
-message Light{
-    uint32 id = 1;
-    string room = 2;
-    uint32 brightness = 3;
-    string color = 4;
-}
-
-
-
 
 // User selects a specific light to access.
 message LightRequest{
     uint32 id = 1;
 }
 
-// Service returns a specific light and shows its ID, location, and current brightness and color settings.
+// Service returns a specific light and shows its ID, location, brightness, and color.
 message LightResponse{
     uint32 id = 1;
     string room = 2;
-    int32 brightness = 3;
+    uint32 brightness = 3;
     string color = 4;
 }
 
-
-
-// User selects values to set.
+// User selects lights to update and values to set.
 message SetLightRequest{
     uint32 id = 1;
     uint32 brightness = 2;
     string color = 3;
 }
 
+// Service returns a confirmation message notifying the user that the settings are successfully implemented.
 message SetLightResponse{
     string confirmationMessage = 1;
 }
-
-
-
-
 
 // User enters a room to see which lights are located within.
 message RoomLightsRequest{
     string room = 1;
 }
-
-
 
 // Service streams an array of all Light items in the given room.
 message RoomLightsResponse{
@@ -76,19 +55,14 @@ message RoomLightsResponse{
     string color = 4;
 }
 
-
-
-//
-// Client-side functionality (input stream):
-//
-
-// User inputs several lights to change at once.
+// User inputs several lights to update at once.
 message SetMultipleLightsRequest{
     uint32 id = 1;
     uint32 brightness = 2;
     string color = 3;
 }
 
+// Service returns a confirmation message notifying the user that the settings are successfully implemented across all requested light IDs.
 message SetMultipleLightsResponse{
     string confirmationMessage = 1;
 }

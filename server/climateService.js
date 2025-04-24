@@ -7,30 +7,39 @@ const definition = protoLoader.loadSync(CLIMATE_PROTO_PATH);
 const climateProto = grpc.loadPackageDefinition(definition).climate;
 
 const readings = [
-  { temperature: 21, humidity: 22 },
-  { temperature: 19, humidity: 62 },
-  { temperature: 16, humidity: 88 },
-  { temperature: 12, humidity: 41 },
-  { temperature: 8, humidity: 23 },
-  { temperature: 17, humidity: 71 },
-  { temperature: 24, humidity: 16 },
+  { time: "06:00", temperature: 11, humidity: 60 },
+  { time: "07:00", temperature: 11, humidity: 58 },
+  { time: "08:00", temperature: 12, humidity: 55 },
+  { time: "09:00", temperature: 12, humidity: 53 },
+  { time: "10:00", temperature: 13, humidity: 45 },
+  { time: "11:00", temperature: 14, humidity: 38 },
+  { time: "12:00", temperature: 15, humidity: 32 },
+  { time: "13:00", temperature: 15, humidity: 25 },
+  { time: "14:00", temperature: 15, humidity: 22 },
+  { time: "15:00", temperature: 16, humidity: 16 },
+  { time: "16:00", temperature: 16, humidity: 15 },
+  { time: "17:00", temperature: 15, humidity: 16 },
+  { time: "18:00", temperature: 14, humidity: 19 },
+  { time: "19:00", temperature: 14, humidity: 30 },
+  { time: "20:00", temperature: 13, humidity: 39 },
 ];
 
-const getClimateReading = (call, callback) => {
-  const currentReading = readings[Math.floor(Math.random() * readings.length)];
-  if (call.request && currentReading) {
-    callback(null, currentReading);
-  } else {
-    callback({
-      code: grpc.status.NOT_FOUND,
-      details: "Climate reading not found.",
-    });
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+const initiateClimateReadings = async (call) => {
+  for (i = 0; i < readings.length; i++) {
+    const climateReading = readings[i];
+    await delay(3000);
+    call.write(climateReading);
   }
+  call.end();
 };
 
 const server = new grpc.Server();
 server.addService(climateProto.ClimateService.service, {
-  GetClimateReading: getClimateReading,
+  InitiateClimateReadings: initiateClimateReadings,
 });
 
 const PORT = "50051";

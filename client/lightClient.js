@@ -32,18 +32,6 @@ const getLight = () => {
   });
 };
 
-const getRoomLights = () => {
-  const roomResponse = readline.question(
-    "Enter a room to see which lights are available: \n"
-  );
-  const call = client.getRoomLights({ room: roomResponse });
-  console.log(`\nThe following lights are in room "${roomResponse}":`);
-  call.on("data", (light) => {
-    console.log(`${light.id}`);
-  });
-  call.on("end", () => console.log(" "));
-};
-
 const setLight = () => {
   const lightToSet = parseInt(
     readline.question("Which light would you like to update? \n")
@@ -70,6 +58,18 @@ const setLight = () => {
       }
     }
   );
+};
+
+const getRoomLights = () => {
+  const roomResponse = readline.question(
+    "Enter a room to see which lights are available: \n"
+  );
+  const call = client.getRoomLights({ room: roomResponse });
+  console.log(`\nThe following lights are in room "${roomResponse}":`);
+  call.on("data", (light) => {
+    console.log(`${light.id}`);
+  });
+  call.on("end", () => console.log(" "));
 };
 
 const setMultipleLights = () => {

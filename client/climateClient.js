@@ -11,17 +11,23 @@ const client = new climateProto.ClimateService(
   grpc.credentials.createInsecure()
 );
 
-const requestMessage = "Begin streaming today's weather readings.";
-client.GetClimateReading({ message: requestMessage }, (error, response) => {
-  if (error) {
-    console.error(error);
-  } else {
+const initiateClimateReadings = () => {
+  const requestMessage = "Begin streaming today's weather readings.";
+  const call = client.InitiateClimateReadings({ message: requestMessage });
+  console.log("\nHOURLY CLIMATE READINGS INITIATED...");
+  call.on("data", (climateReading) => {
     console.log(
       `
-      WEATHER DETAILS 
-      temperature: ${response.temperature}
-      humidity:    ${response.humidity}
-      `
+    WEATHER DETAILS FOR ${climateReading.time}
+    -------------------------
+    TEMPERATURE: ${climateReading.temperature}
+    HUMIDITY:    ${climateReading.humidity}
+    `
     );
-  }
-});
+  });
+  call.on("end", () => {
+    console.log("CLIMATE READINGS COMPLETE.  SYSTEM RESET FOR TOMORROW. \n");
+  });
+};
+
+initiateClimateReadings();

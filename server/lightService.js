@@ -6,23 +6,33 @@ const LIGHT_PROTO_PATH = path.join(__dirname, "../protos/light.proto");
 const definition = protoLoader.loadSync(LIGHT_PROTO_PATH);
 const lightProto = grpc.loadPackageDefinition(definition).light;
 
+// Array of lights positioned in various rooms throughout the office.
 const lights = [
   { id: 1, room: "conference", brightness: 100, color: "bright white" },
   { id: 2, room: "conference", brightness: 100, color: "bright white" },
   { id: 3, room: "conference", brightness: 100, color: "bright white" },
-  { id: 4, room: "office 1", brightness: 70, color: "light blue" },
-  { id: 5, room: "office 1", brightness: 70, color: "light blue" },
-  { id: 6, room: "office 2", brightness: 0, color: "warm yellow" },
-  { id: 7, room: "office 2", brightness: 0, color: "warm yellow" },
-  { id: 8, room: "entrance", brightness: 100, color: "red" },
-  { id: 9, room: "entrance", brightness: 100, color: "green" },
-  { id: 10, room: "entrance", brightness: 100, color: "red" },
-  { id: 11, room: "entrance", brightness: 100, color: "green" },
-  { id: 12, room: "hallway", brightness: 90, color: "soft white" },
-  { id: 13, room: "hallway", brightness: 90, color: "soft white" },
-  { id: 14, room: "elevator", brightness: 60, color: "warm yellow" },
+  { id: 4, room: "conference", brightness: 100, color: "bright white" },
+  { id: 5, room: "conference", brightness: 100, color: "bright white" },
+  { id: 6, room: "conference", brightness: 100, color: "bright white" },
+  { id: 7, room: "office 1", brightness: 70, color: "light blue" },
+  { id: 8, room: "office 1", brightness: 70, color: "light blue" },
+  { id: 9, room: "office 2", brightness: 0, color: "warm yellow" },
+  { id: 10, room: "office 2", brightness: 0, color: "warm yellow" },
+  { id: 11, room: "entrance", brightness: 100, color: "red" },
+  { id: 12, room: "entrance", brightness: 100, color: "green" },
+  { id: 13, room: "entrance", brightness: 100, color: "red" },
+  { id: 14, room: "entrance", brightness: 100, color: "green" },
+  { id: 15, room: "hallway", brightness: 90, color: "soft white" },
+  { id: 16, room: "hallway", brightness: 90, color: "soft white" },
+  { id: 17, room: "hallway", brightness: 90, color: "soft white" },
+  { id: 18, room: "hallway", brightness: 90, color: "soft white" },
+  { id: 19, room: "hallway", brightness: 90, color: "soft white" },
+  { id: 20, room: "hallway", brightness: 90, color: "soft white" },
+  { id: 21, room: "elevator", brightness: 60, color: "warm yellow" },
+  { id: 22, room: "elevator", brightness: 60, color: "warm yellow" },
 ];
 
+// Function to access any light by its ID.
 const getLight = (call, callback) => {
   const light = lights.find((light) => light.id === call.request.id);
   if (light) {
@@ -35,15 +45,7 @@ const getLight = (call, callback) => {
   }
 };
 
-const getRoomLights = (call) => {
-  lights.forEach((light) => {
-    if (light.room === call.request.room) {
-      call.write(light);
-    }
-  });
-  call.end();
-};
-
+// Function to change the settings of a particular light.
 const setLight = (call, callback) => {
   const light = lights.find((light) => light.id === call.request.id);
   if (light) {
@@ -63,6 +65,17 @@ const setLight = (call, callback) => {
   }
 };
 
+// Function to get all the lights in a particular room.
+const getRoomLights = (call) => {
+  lights.forEach((light) => {
+    if (light.room === call.request.room) {
+      call.write(light);
+    }
+  });
+  call.end();
+};
+
+// Function to enter a single brightness setting and single color setting, and then apply those settings across multiple lights in multiple rooms.
 const setMultipleLights = (call, callback) => {
   const lightsToSet = [];
   let setBrightness = 0;

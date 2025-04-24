@@ -6,7 +6,7 @@ package climate;
 // Will emit a stream of weather conditions every 30 minutes to update the internal office climate.
 
 service ClimateService{
-    rpc GetClimateReading(ClimateRequest) returns (ClimateResponse);
+    rpc InitiateClimateReadings(ClimateRequest) returns (stream ClimateResponse);
 }
 
 // Service makes a request at 6am each morning.
@@ -16,7 +16,8 @@ message ClimateRequest{
 
 // Service receives a continuous stream of local temperature and humidity readings and controls the office climate accordingly. 
 message ClimateResponse{
-    int32 temperature = 1;
-    int32 humidity = 2;
+    string time = 1;
+    uint32 temperature = 2;
+    uint32 humidity = 3;
 }
 
