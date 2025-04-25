@@ -6,14 +6,11 @@ package security;
 // Service allows a security agent (or program) to ask users security questions and accept responses to be checked.
 
 service SecurityService{
-    rpc AskSecurityQuestions(stream QuestionFromSecurity) returns (stream AnswerFromEmployee);
+    rpc SecurityClearance(stream SecurityCorrespondence) returns (stream SecurityCorrespondence);
 }
 
-message QuestionFromSecurity{
-    uint32 id = 1;
-    string question = 2;}
-
-message AnswerFromEmployee{
-    uint32 id = 1;
-    string answer = 2;
+message SecurityCorrespondence{
+    string user = 1;
+    string action = 2;
+    string message = 3;
 }

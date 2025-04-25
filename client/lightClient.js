@@ -69,7 +69,7 @@ const getRoomLights = () => {
   call.on("data", (light) => {
     console.log(`${light.id}`);
   });
-  call.on("end", () => console.log(" "));
+  call.on("end", () => {});
 };
 
 const setMultipleLights = () => {

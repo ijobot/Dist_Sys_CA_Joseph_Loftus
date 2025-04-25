@@ -1,6 +1,7 @@
 const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 const path = require("path");
+const readline = require("readline");
 
 const SECURITY_PROTO_PATH = path.join(__dirname, "../protos/security.proto");
 const definition = protoLoader.loadSync(SECURITY_PROTO_PATH);
@@ -11,33 +12,50 @@ const client = new securityProto.SecurityService(
   grpc.credentials.createInsecure()
 );
 
-const question = "What is your employee number?";
-client.AskSecurityQuestion({ question: question }, (error, response) => {
-  if (error) {
-    console.error("Error:", error);
-  } else {
-    console.log(
-      `
-      ACCESS GRANTED 
-      
-      `
-    );
-  }
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
 });
 
-// const room = "conference";
-// client.getRoomLights({ room: room }, (error, response) => {
-//   if (error) {
-//     console.error("Error:", error);
-//   } else {
-//     console.log(`The room ${room} has the following lights in it: ${response}`);
-//   }
-// });
+const call = client.securityClearance();
+call.on("data", (response) => {
+  console.log(`
+    ${response.user} - ${response.action} ${response.message}
+    `);
+  currentAction++;
+});
 
-// const call = client.getRoomLights({ room: room });
-// call.on("data", (light) => {
-//   console.log("HI JOE WORKING");
-// });
-// call.on("end", () => {
-//   console.log("Server done.");
-// });
+call.on("end", () => {
+  call.end();
+  rl.close();
+});
+
+call.on("error", (e) => {
+  console.log(e);
+});
+
+let currentAction = 1;
+
+console.log(
+  "SECURITY - DESK WELCOME: Please type your full name, or 'Q' to quit. "
+);
+
+rl.on("line", (enteredText) => {
+  if (enteredText.toLowerCase() === "q") {
+    call.end();
+    rl.close();
+  }
+  if (currentAction === 1) {
+    call.write({ action: "sign in", user: enteredText, message: "" });
+  }
+  if (currentAction === 2) {
+    call.write({ action: "verify", user: enteredText, message: "" });
+  }
+  if (currentAction === 3) {
+    call.write({ action: "secret piece", user: enteredText, message: "" });
+  }
+  if (currentAction === 4) {
+    call.end();
+    rl.close();
+  }
+});
