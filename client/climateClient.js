@@ -13,17 +13,16 @@ const client = new climateProto.ClimateService(
 
 const initiateClimateReadings = () => {
   const requestMessage = "Begin streaming today's weather readings.";
-  const call = client.InitiateClimateReadings({ message: requestMessage });
+  const call = client.initiateClimateReadings({ message: requestMessage });
   console.log("\nHOURLY CLIMATE READINGS INITIATED...");
   call.on("data", (climateReading) => {
-    console.log(
-      `
+    const reading = `
     WEATHER DETAILS FOR ${climateReading.time}
     -------------------------
     TEMPERATURE: ${climateReading.temperature}
     HUMIDITY:    ${climateReading.humidity}
-    `
-    );
+    `;
+    return reading;
   });
   call.on("end", () => {
     console.log("CLIMATE READINGS COMPLETE.  SYSTEM RESET FOR TOMORROW. \n");
@@ -31,3 +30,7 @@ const initiateClimateReadings = () => {
 };
 
 initiateClimateReadings();
+
+module.exports = {
+  initiateClimateReadings,
+};

@@ -3,9 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link rel="stylesheet" href="public/styles.css"> -->
     <title>J&J Brick Shippers Smart Offices</title>
   </head>
-  <body>
+
     <h1>J&J Brick Shippers Smart Offices</h1>
+
+    <h3>Light Service</h3>
+    <label for="lightId">Get Light by ID:</label>
+    <input type="text" name="lightId" id="lightId" required>
+    <% if (response) { %>
+      <div class="test">
+        <p><%= response.id %></p>
+        <p><%= response.room %></p>
+        <p><%= response.brightness %></p>
+        <p><%= response.color %></p>
+      </div>
+    <% } %>
+
+    <!-- <script src="../views/gui.js"></script> -->
+    <style>.test {
+      display: flex;
+      outline: 2px red solid;
+    }</style>
   </body>
 </html>

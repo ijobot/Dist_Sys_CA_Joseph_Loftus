@@ -38,6 +38,7 @@ const getLight = (call, callback) => {
   if (light) {
     callback(null, light);
   } else {
+    console.log("HEY JOE ERROR");
     callback({
       code: grpc.status.NOT_FOUND,
       details: "Light not found.",

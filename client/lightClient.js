@@ -12,14 +12,15 @@ const client = new lightProto.LightService(
   grpc.credentials.createInsecure()
 );
 
-const getLight = () => {
-  const lightId = readline.question(
-    "Please enter a Light ID to see its details: \n"
-  );
-  client.getLight({ id: lightId }, (error, response) => {
+const getLight = (inputId) => {
+  // const lightId = readline.question(
+  //   "Please enter a Light ID to see its details: \n"
+  // );
+  client.getLight({ id: inputId }, (error, response) => {
     if (error) {
-      console.error("Error:", error);
+      // console.error("Error:", error);
     } else {
+      console.log(response);
       console.log(
         `
           DETAILS FOR LIGHT ${response.id}
@@ -28,6 +29,7 @@ const getLight = () => {
           color:         ${response.color}
           `
       );
+      return response;
     }
   });
 };
