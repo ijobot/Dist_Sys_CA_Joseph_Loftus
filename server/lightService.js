@@ -26,10 +26,8 @@ const lights = [
   { id: 16, room: "hallway", brightness: 90, color: "soft white" },
   { id: 17, room: "hallway", brightness: 90, color: "soft white" },
   { id: 18, room: "hallway", brightness: 90, color: "soft white" },
-  { id: 19, room: "hallway", brightness: 90, color: "soft white" },
-  { id: 20, room: "hallway", brightness: 90, color: "soft white" },
-  { id: 21, room: "elevator", brightness: 60, color: "warm yellow" },
-  { id: 22, room: "elevator", brightness: 60, color: "warm yellow" },
+  { id: 19, room: "elevator", brightness: 60, color: "warm yellow" },
+  { id: 20, room: "elevator", brightness: 60, color: "warm yellow" },
 ];
 
 // Function to access any light by its ID.
@@ -38,7 +36,7 @@ const getLight = (call, callback) => {
   if (light) {
     callback(null, light);
   } else {
-    console.log("HEY JOE ERROR");
+    console.log("HEY JOE ERROR FROM LIGHTSERVICE");
     callback({
       code: grpc.status.NOT_FOUND,
       details: "Light not found.",
@@ -59,6 +57,7 @@ const setLight = (call, callback) => {
     `;
     callback(null, { confirmationMessage });
   } else {
+    console.log("HEY JOE ERROR FROM LIGHTSERVICE");
     callback({
       code: grpc.status.NOT_FOUND,
       details: "There was a problem.  Light has not been set.",

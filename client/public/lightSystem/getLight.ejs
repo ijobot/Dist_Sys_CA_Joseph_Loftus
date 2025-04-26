@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>J&J Smart Offices</title>
+  </head>
+  <body>
+    <h1>J&J Brick Shippers Smart Offices</h1>
+
+    <h2>Get Light Details by ID</h2>
+    <form action="/getLight" method="POST">
+      <label
+        >Enter an ID from 1-20:
+        <input
+          type="text"
+          name="lightEntered"
+          id="lightEntered"
+          value="<%= lightEntered %>"
+      /></label>
+      <button type="submit">Submit</button>
+    </form>
+
+    <div>
+      <% if (response) { %>
+      <div>
+        <p><%= response.id %></p>
+        <p><%= response.room %></p>
+        <p><%= response.brightness %></p>
+        <p><%= response.color %></p>
+      </div>
+      <% } %>
+    </div>
+  </body>
+  <style>
+    body {
+      height: 100vh;
+      width: 100%;
+    }
+    h1 {
+      width: 100%;
+      text-align: center;
+      margin: 0;
+    }
+  </style>
+</html>

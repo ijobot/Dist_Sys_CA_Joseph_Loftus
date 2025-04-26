@@ -13,10 +13,10 @@ const client = new lightProto.LightService(
 );
 
 const getLight = (inputId) => {
-  // const lightId = readline.question(
-  //   "Please enter a Light ID to see its details: \n"
-  // );
-  client.getLight({ id: inputId }, (error, response) => {
+  const lightId = readline.question(
+    "Please enter a Light ID to see its details: \n"
+  );
+  client.getLight({ id: inputId || lightId }, (error, response) => {
     if (error) {
       // console.error("Error:", error);
     } else {
