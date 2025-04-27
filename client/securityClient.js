@@ -2,6 +2,7 @@ const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 const path = require("path");
 const readline = require("readline");
+const crypto = require("crypto-js");
 
 const SECURITY_PROTO_PATH = path.join(__dirname, "../protos/security.proto");
 const definition = protoLoader.loadSync(SECURITY_PROTO_PATH);
@@ -12,6 +13,16 @@ const client = new securityProto.SecurityService(
   "localhost:50053",
   grpc.credentials.createInsecure()
 );
+
+// Helper functions for encryption
+const encryptBeforeSend = (message, secretKey) => {
+  return crypto.AES.encrypt(message, secretKey).toString();
+};
+const decryptOnRecieve = (cipherText, secretKey) => {
+  let bytes = crypto.AES.decrypt(cipherText, secretKey);
+  return bytes.toString(crypto.enc.Utf8);
+};
+const secretKey = "12345isThePasswordOnMyLuggage";
 
 // Client functionality for the Security Service.
 const securityClearance = () => {
@@ -24,9 +35,17 @@ const securityClearance = () => {
   // When recieving call data, print out in readable fashion and increase the currentAction value by 1.
   const call = client.securityClearance();
   call.on("data", (response) => {
-    console.log(`
-    ${response.user} - ${response.action} ${response.message}
-    `);
+    console.log(response.message);
+    if (response.action === "AUTHORIZED:" || response.action === "REFUSE:") {
+      console.log(`
+        ${response.user} - ${response.action} ${response.message}
+        `);
+    } else {
+      const decryptedMessage = decryptOnRecieve(response.message, secretKey);
+      console.log(`
+      ${response.user} - ${response.action} ${decryptedMessage}
+      `);
+    }
     currentAction++;
   });
 
@@ -35,8 +54,11 @@ const securityClearance = () => {
     rl.close();
   });
 
-  call.on("error", (e) => {
-    console.log(e);
+  call.on("error", (error) => {
+    console.log(
+      "Error :: securityClearance function :: securityClient file",
+      error
+    );
   });
 
   let currentAction = 1;
@@ -52,14 +74,23 @@ const securityClearance = () => {
       call.end();
       rl.close();
     }
+    const encrytedText = encryptBeforeSend(enteredText, secretKey);
     if (currentAction === 1) {
-      call.write({ action: "sign in", user: enteredText, message: "" });
+      call.write({
+        action: "sign in",
+        user: "employee",
+        message: encrytedText,
+      });
     }
     if (currentAction === 2) {
-      call.write({ action: "verify", user: enteredText, message: "" });
+      call.write({ action: "verify", user: "employee", message: encrytedText });
     }
     if (currentAction === 3) {
-      call.write({ action: "secret piece", user: enteredText, message: "" });
+      call.write({
+        action: "secret piece",
+        user: "employee",
+        message: encrytedText,
+      });
     }
     if (currentAction === 4) {
       call.end();
@@ -67,6 +98,8 @@ const securityClearance = () => {
     }
   });
 };
+
+securityClearance();
 
 module.exports = {
   securityClearance,

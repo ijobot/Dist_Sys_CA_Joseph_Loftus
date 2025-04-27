@@ -3,24 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>J&J Smart Offices</title>
+    <title>Smart Offices</title>
   </head>
   <body>
-    <h1>J&J Brick Shippers Smart Offices</h1>
+    <div class="container">
+      <h1>J&J Brick Shippers Smart Offices</h1>
 
-    <h2>Get Climate Readings on the Hour</h2>
-    <p>Climate Service Address:</p>
-    <p><%= address %></p>
+      <h2>Get Climate Readings on the Hour</h2>
+      <div class="flex">
+        <p><strong>Climate Service Address:&nbsp;</strong></p>
+        <p><%= address %></p>
+      </div>
+    </div>
   </body>
   <style>
     body {
       height: 100vh;
       width: 100%;
+      background-color: rgb(153, 217, 184);
+      margin: 0;
+    }
+    .container {
+      padding: 0 40px;
     }
     h1 {
       width: 100%;
       text-align: center;
       margin: 0;
+      padding: 40px 0;
+    }
+    .flex {
+      display: flex;
     }
   </style>
 </html>

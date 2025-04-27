@@ -44,6 +44,8 @@ server.bindAsync(
   `localhost:${PORT}`,
   grpc.ServerCredentials.createInsecure(),
   () => {
-    console.log("Discovery Service is running!");
+    console.log(`
+      Discovery Service is running on localhost:${PORT}.
+      `);
   }
 );

@@ -21,13 +21,13 @@ const getLight = (inputId) => {
   );
   client.getLight({ id: inputId || lightId }, (error, response) => {
     if (error) {
-      console.log("Error in getLight function within the lightClient.", error);
+      console.log("Error :: getLight function :: lightClient file", error);
     } else {
       // Display light details for the user.
       console.log(
         `
           DETAILS FOR LIGHT ${response.id}
-          room:          ${response.room}
+          location:      ${response.location}
           brightness:    ${response.brightness}
           color:         ${response.color}
           `
@@ -57,10 +57,7 @@ const setLight = () => {
     },
     (error, response) => {
       if (error) {
-        console.log(
-          "Error in setLight function within the lightClient.",
-          error
-        );
+        console.log("Error :: setLight function :: lightClient file", error);
       } else {
         // Send user confirmation message with new settings.
         console.log(
@@ -73,14 +70,14 @@ const setLight = () => {
   );
 };
 
-const getRoomLights = () => {
-  // Prompt user to enter a room to check which lights are located within.
-  const roomResponse = readline.question(
-    "Enter a room to see which lights are available: \n"
+const getLocationLights = () => {
+  // Prompt user to enter a location to check which lights are located within.
+  const locationResponse = readline.question(
+    "Enter a location to see which lights are available: \n"
   );
-  const call = client.getRoomLights({ room: roomResponse });
+  const call = client.getLocationLights({ location: locationResponse });
   // Initial printout to begin the sequence.
-  console.log(`\nThe following lights are in room "${roomResponse}":`);
+  console.log(`\nThe following lights are in location "${locationResponse}":`);
   // Each light is printed in succession as the stream of emissions is recieved.
   call.on("data", (light) => {
     console.log(`${light.id}`);
@@ -92,7 +89,7 @@ const setMultipleLights = (inputId, inputBrightness, inputColor, fromGUI) => {
   const call = client.setMultipleLights((error, response) => {
     if (error) {
       console.log(
-        "Error in setMultipleLights function within the lightClient.",
+        "Error :: setMultipleLights function :: lightClient file",
         error
       );
     } else {
@@ -150,9 +147,9 @@ function mainMenu() {
   console.log(
     `
       1. Get a single light by its ID.
-      2. Get all the light IDs in a particular room.
+      2. Get all the light IDs in a particular location.
       3. Adjust a single light's settings.
-      4. Adjust all lights in a particular room.
+      4. Adjust all lights in a particular location.
       5. Exit the Light Service.
       `
   );
@@ -164,7 +161,7 @@ function mainMenu() {
       getLight();
       break;
     case 2:
-      getRoomLights();
+      getLocationLights();
       break;
     case 3:
       setLight();
@@ -184,7 +181,7 @@ mainMenu();
 
 module.exports = {
   getLight,
-  getRoomLights,
+  getLocationLights,
   setLight,
   setMultipleLights,
 };

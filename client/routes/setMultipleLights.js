@@ -5,9 +5,9 @@ const client = require("../mainClient");
 // Establish the router for the setMultipleLights function and its display page.
 router.get("/", (req, res) => {
   res.render("lightSystem/setMultipleLights", {
-    inputId: 1,
-    inputBrightness: 1,
-    inputColor: "white",
+    inputId: "1,4,8,9",
+    inputBrightness: 90,
+    inputColor: "soft white",
     keepGoing: "y",
     response: {},
   });

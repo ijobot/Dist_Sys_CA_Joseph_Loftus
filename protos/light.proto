@@ -11,7 +11,7 @@ service LightService {
     rpc SetLight(SetLightRequest) returns (SetLightResponse);
 
     // Server-Streaming function:
-    rpc GetRoomLights(RoomLightsRequest) returns (stream RoomLightsResponse);
+    rpc GetLocationLights(LocationLightsRequest) returns (stream LocationLightsResponse);
 
     // Client-Streaming function:
     rpc SetMultipleLights(stream SetMultipleLightsRequest) returns (SetMultipleLightsResponse);
@@ -25,7 +25,7 @@ message LightRequest{
 // Service returns a specific light and shows its ID, location, brightness, and color.
 message LightResponse{
     uint32 id = 1;
-    string room = 2;
+    string location = 2;
     uint32 brightness = 3;
     string color = 4;
 }
@@ -42,15 +42,15 @@ message SetLightResponse{
     string confirmationMessage = 1;
 }
 
-// User enters a room to see which lights are located within.
-message RoomLightsRequest{
-    string room = 1;
+// User enters a location to see which lights are located within.
+message LocationLightsRequest{
+    string location = 1;
 }
 
-// Service emits a stream of all lights in the given room.
-message RoomLightsResponse{
+// Service emits a stream of all lights in the given location.
+message LocationLightsResponse{
     uint32 id = 1;
-    string room = 2;
+    string location = 2;
     uint32 brightness = 3;
     string color = 4;
 }

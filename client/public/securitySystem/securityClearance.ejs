@@ -3,25 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>J&J Smart Offices</title>
+    <title>Smart Offices</title>
   </head>
   <body>
-    <h1>J&J Brick Shippers Smart Offices</h1>
+    <div class="container">
+      <h1>J&J Brick Shippers Smart Offices</h1>
 
-    <h2>Connect with Security System to be Authorized</h2>
-
-    <p>Security Service Address:</p>
-    <p><%= address %></p>
+      <h2>Connect with Security System to be Authorized</h2>
+      <div class="flex">
+        <p><strong>Security Service Address:&nbsp;</strong></p>
+        <p><%= address %></p>
+      </div>
+    </div>
   </body>
   <style>
     body {
       height: 100vh;
       width: 100%;
+      background-color: rgb(231, 187, 230);
+      margin: 0;
+    }
+    .container {
+      padding: 0 40px;
     }
     h1 {
       width: 100%;
       text-align: center;
       margin: 0;
+      padding: 40px 0;
+    }
+    .flex {
+      display: flex;
     }
   </style>
 </html>

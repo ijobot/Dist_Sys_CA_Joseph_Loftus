@@ -58,6 +58,8 @@ server.bindAsync(
   `localhost:${PORT}`,
   grpc.ServerCredentials.createInsecure(),
   () => {
-    console.log(`Climate Service is running on localhost:${PORT}`);
+    console.log(`
+      Climate Service is running on localhost:${PORT}.
+      `);
   }
 );

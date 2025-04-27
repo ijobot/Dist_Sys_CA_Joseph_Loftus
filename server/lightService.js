@@ -8,26 +8,26 @@ const lightProto = grpc.loadPackageDefinition(definition).light;
 
 // Emulating a lightmap database (would be hosted in Mongo or SQL in a real world scenario).
 const lights = [
-  { id: 1, room: "conference", brightness: 100, color: "bright white" },
-  { id: 2, room: "conference", brightness: 100, color: "bright white" },
-  { id: 3, room: "conference", brightness: 100, color: "bright white" },
-  { id: 4, room: "conference", brightness: 100, color: "bright white" },
-  { id: 5, room: "conference", brightness: 100, color: "bright white" },
-  { id: 6, room: "conference", brightness: 100, color: "bright white" },
-  { id: 7, room: "office 1", brightness: 70, color: "light blue" },
-  { id: 8, room: "office 1", brightness: 70, color: "light blue" },
-  { id: 9, room: "office 2", brightness: 0, color: "warm yellow" },
-  { id: 10, room: "office 2", brightness: 0, color: "warm yellow" },
-  { id: 11, room: "entrance", brightness: 100, color: "red" },
-  { id: 12, room: "entrance", brightness: 100, color: "green" },
-  { id: 13, room: "entrance", brightness: 100, color: "red" },
-  { id: 14, room: "entrance", brightness: 100, color: "green" },
-  { id: 15, room: "hallway", brightness: 90, color: "soft white" },
-  { id: 16, room: "hallway", brightness: 90, color: "soft white" },
-  { id: 17, room: "hallway", brightness: 90, color: "soft white" },
-  { id: 18, room: "hallway", brightness: 90, color: "soft white" },
-  { id: 19, room: "elevator", brightness: 60, color: "warm yellow" },
-  { id: 20, room: "elevator", brightness: 60, color: "warm yellow" },
+  { id: 1, location: "conference", brightness: 100, color: "bright white" },
+  { id: 2, location: "conference", brightness: 100, color: "bright white" },
+  { id: 3, location: "conference", brightness: 100, color: "bright white" },
+  { id: 4, location: "conference", brightness: 100, color: "bright white" },
+  { id: 5, location: "conference", brightness: 100, color: "bright white" },
+  { id: 6, location: "conference", brightness: 100, color: "bright white" },
+  { id: 7, location: "office 1", brightness: 70, color: "light blue" },
+  { id: 8, location: "office 1", brightness: 70, color: "light blue" },
+  { id: 9, location: "office 2", brightness: 0, color: "warm yellow" },
+  { id: 10, location: "office 2", brightness: 0, color: "warm yellow" },
+  { id: 11, location: "entrance", brightness: 100, color: "red" },
+  { id: 12, location: "entrance", brightness: 100, color: "green" },
+  { id: 13, location: "entrance", brightness: 100, color: "red" },
+  { id: 14, location: "entrance", brightness: 100, color: "green" },
+  { id: 15, location: "hallway", brightness: 90, color: "soft white" },
+  { id: 16, location: "hallway", brightness: 90, color: "soft white" },
+  { id: 17, location: "hallway", brightness: 90, color: "soft white" },
+  { id: 18, location: "hallway", brightness: 90, color: "soft white" },
+  { id: 19, location: "elevator", brightness: 60, color: "warm yellow" },
+  { id: 20, location: "elevator", brightness: 60, color: "warm yellow" },
 ];
 
 // --------------------------
@@ -55,9 +55,11 @@ const setLight = (call, callback) => {
     light.brightness = call.request.brightness;
     light.color = call.request.color;
     const confirmationMessage = `
-    LIGHT ${light.id} IN "${light.room.toUpperCase()}" HAS BEEN SET!
-    brightness: ${light.brightness}
-    color: ${light.color}
+    LIGHT ${
+      light.id
+    } IN LOCATION "${light.location.toUpperCase()}" HAS BEEN SET!
+    BRIGHTNESS:  ${light.brightness}
+    COLOR:       ${light.color.toUpperCase()}
     `;
     callback(null, { confirmationMessage });
   } else {
@@ -73,10 +75,10 @@ const setLight = (call, callback) => {
 // Server-Streaming Service
 // --------------------------
 
-// Function makes a single call using a room argument and returns a stream of lights in that room.
-const getRoomLights = (call) => {
+// Function makes a single call using a location argument and returns a stream of lights in that location.
+const getLocationLights = (call) => {
   lights.forEach((light) => {
-    if (light.room === call.request.room) {
+    if (light.location === call.request.location) {
       call.write(light);
     }
   });
@@ -111,7 +113,7 @@ const setMultipleLights = (call, callback) => {
 const server = new grpc.Server();
 server.addService(lightProto.LightService.service, {
   GetLight: getLight,
-  GetRoomLights: getRoomLights,
+  GetLocationLights: getLocationLights,
   SetLight: setLight,
   SetMultipleLights: setMultipleLights,
 });
@@ -122,6 +124,8 @@ server.bindAsync(
   `localhost:${PORT}`,
   grpc.ServerCredentials.createInsecure(),
   () => {
-    console.log(`Light Service is running on localhost:${PORT}`);
+    console.log(`
+      Light Service is running on localhost:${PORT}.
+      `);
   }
 );
