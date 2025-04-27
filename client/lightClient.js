@@ -74,7 +74,7 @@ const getRoomLights = () => {
   call.on("end", () => {});
 };
 
-const setMultipleLights = () => {
+const setMultipleLights = (inputId, inputBrightness, inputColor, fromGUI) => {
   const call = client.setMultipleLights((error, response) => {
     if (error) {
       console.error(error);
@@ -92,12 +92,22 @@ const setMultipleLights = () => {
   );
 
   let addMore = true;
-  while (addMore) {
-    const id = parseInt(
-      readline.question("Please enter a light ID to add to the list. \n")
-    );
-    call.write({ id, brightness, color });
-    addMore = readline.keyInYNStrict("Add another? \n");
+  if (!fromGUI) {
+    console.log("HEY JOE IN LOOPR");
+    while (addMore) {
+      const id = parseInt(
+        readline.question("Please enter a light ID to add to the list. \n")
+      );
+      call.write(
+        { id, brightness, color } || { inputId, inputBrightness, inputColor }
+      );
+      addMore = readline.keyInYNStrict("Add another? \n");
+    }
+  } else {
+    inputId
+      .split(",")
+      .forEach((item = call.write({ item, inputBrightness, inputColor })));
+    call.end();
   }
   call.end();
 };

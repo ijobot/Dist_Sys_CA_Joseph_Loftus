@@ -1,7 +1,8 @@
 const express = require("express");
 const path = require("path");
 const client = require("./mainClient");
-const lightsRouter = require("./routes/getLight");
+const getLightRouter = require("./routes/getLight");
+const setMultipleLightsRouter = require("./routes/setMultipleLights");
 
 const app = express();
 const PORT = 3000;
@@ -13,7 +14,8 @@ app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../client/public"));
 
-app.use("/getLight", lightsRouter);
+app.use("/getLight", getLightRouter);
+app.use("/setMultipleLights", setMultipleLightsRouter);
 
 app.get("/", (req, res) => {
   console.log("HEY JOE FROM MAIN PAGE");

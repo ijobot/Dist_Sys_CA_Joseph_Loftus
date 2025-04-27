@@ -83,107 +83,15 @@ const getLight = (lightId, callback) => {
   });
 };
 
-// const setLight = () => {
-//   const lightToSet = parseInt(
-//     readlineSync.question("Which light would you like to update? \n")
-//   );
-//   const setBrightness = parseInt(
-//     readlineSync.question("Please enter a brightness setting from 1-100: \n")
-//   );
-//   const setColor = readlineSync.question("Please enter the color setting: \n");
-//   lightClient.setLight(
-//     {
-//       id: lightToSet,
-//       brightness: setBrightness,
-//       color: setColor,
-//     },
-//     (error, response) => {
-//       if (error) {
-//         console.error("Error:", error);
-//       } else {
-//         console.log(
-//           `
-//           ${response.confirmationMessage}
-//           `
-//         );
-//       }
-//     }
-//   );
-// };
-
-// const getRoomLights = () => {
-//   const roomResponse = readlineSync.question(
-//     "Enter a room to see which lights are available: \n"
-//   );
-//   const call = lightClient.getRoomLights({ room: roomResponse });
-//   console.log(`\nThe following lights are in room "${roomResponse}":`);
-//   call.on("data", (light) => {
-//     console.log(`${light.id}`);
-//   });
-//   call.on("end", () => {});
-// };
-
-// const setMultipleLights = () => {
-//   const call = lightClient.setMultipleLights((error, response) => {
-//     if (error) {
-//       console.error(error);
-//     } else {
-//       console.log(response.confirmationMessage);
-//     }
-//   });
-//   const brightness = parseInt(
-//     readlineSync.question(
-//       "Please enter a brightness setting from 1-100 for multiple lights: \n"
-//     )
-//   );
-//   const color = readlineSync.question(
-//     "Please enter a color setting for multiple lights: \n"
-//   );
-
-//   let addMore = true;
-//   while (addMore) {
-//     const id = parseInt(
-//       readlineSync.question("Please enter a light ID to add to the list. \n")
-//     );
-//     call.write({ id, brightness, color });
-//     addMore = readlineSync.keyInYNStrict("Add another? \n");
-//   }
-//   call.end();
-// };
-
-// function mainMenu() {
-//   console.log(
-//     `
-//       1. Get a single light by its ID.
-//       2. Get all the light IDs in a particular room.
-//       3. Adjust a single light's settings.
-//       4. Adjust all lights in a particular room.
-//       5. Exit the Light Service.
-//       `
-//   );
-//   const choice = parseInt(readlineSync.question("Choose a function: \n"));
-
-//   switch (choice) {
-//     case 1:
-//       getLight();
-//       break;
-//     case 2:
-//       getRoomLights();
-//       break;
-//     case 3:
-//       setLight();
-//       break;
-//     case 4:
-//       setMultipleLights();
-//       break;
-//     case 5:
-//       return;
-//     default:
-//       console.log("Please choose a function from 1 to 4.");
-//   }
-// }
-
-// mainMenu();
+const setMultipleLights = ({ inputs }, callback) => {
+  lightClient.setMultipleLights({ inputs }, (error, response) => {
+    if (error) {
+      console.error(error);
+    } else {
+      callback(response.confirmationMessage);
+    }
+  });
+};
 
 // // Security client functions
 // const securityClearance = () => {
@@ -239,4 +147,5 @@ const getLight = (lightId, callback) => {
 module.exports = {
   loadService,
   getLight,
+  setMultipleLights,
 };

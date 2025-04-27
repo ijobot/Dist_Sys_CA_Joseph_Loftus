@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>J&J Smart Offices</title>
+  </head>
+  <body>
+    <h1>J&J Brick Shippers Smart Offices</h1>
+
+    <h2>Set Multiple Lights at Once</h2>
+    <form action="/setMultipleLights" method="POST" class="flex">
+      <label
+        >Enter comma-separated IDs from 1-20 to add them to the list:
+        <input type="text" name="inputId" id="inputId" value="<%= inputId %>"
+      /></label>
+      <label
+        >Enter a brightness level from 1-100 for all lights:
+        <input
+          type="text"
+          name="inputBrightness"
+          id="inputBrightness"
+          value="<%= inputBrightness %>"
+      /></label>
+      <label
+        >Enter a color for all lights:
+        <input
+          type="text"
+          name="inputColor"
+          id="inputColor"
+          value="<%= inputColor %>"
+      /></label>
+      <button type="submit">Submit</button>
+    </form>
+
+    <div>
+      <% if (response) { %>
+      <div>
+        <p><%= response.confirmationMessage %></p>
+      </div>
+      <% } %>
+    </div>
+  </body>
+  <style>
+    body {
+      height: 100vh;
+      width: 100%;
+    }
+    h1 {
+      width: 100%;
+      text-align: center;
+      margin: 0;
+    }
+    .flex {
+      display: flex;
+      flex-direction: column;
+      width: min-content;
+      gap: 20px;
+      padding-left: 40px;
+    }
+  </style>
+</html>
