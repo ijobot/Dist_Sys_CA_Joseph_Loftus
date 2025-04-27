@@ -22,6 +22,7 @@ const initiateClimateReadings = () => {
     TEMPERATURE: ${climateReading.temperature}
     HUMIDITY:    ${climateReading.humidity}
     `;
+    console.log(reading);
     return reading;
   });
   call.on("end", () => {

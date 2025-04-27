@@ -77,16 +77,21 @@ const getRoomLights = (call) => {
 
 // Function to enter a single brightness setting and single color setting, and then apply those settings across multiple lights in multiple rooms.
 const setMultipleLights = (call, callback) => {
+  console.log("HEY JOE FUNCTION WAS CALLED");
   const lightsToSet = [];
   let setBrightness = 0;
   let setColor = "white";
 
   call.on("data", ({ id, brightness, color }) => {
+    console.log("HEY JOE RECIEVED DATA");
+    console.log({ id, brightness, color });
     lightsToSet.push(id);
     setBrightness = brightness;
     setColor = color;
   });
   call.on("end", () => {
+    console.log("HEY JOE ENDING CALL");
+
     const confirmationMessage = `Lights [${lightsToSet.join(
       " "
     )}] have all been set to brightness: ${setBrightness} and color: ${setColor.toUpperCase()}.`;

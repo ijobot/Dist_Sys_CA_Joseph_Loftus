@@ -77,9 +77,14 @@ const getRoomLights = () => {
 const setMultipleLights = (inputId, inputBrightness, inputColor, fromGUI) => {
   const call = client.setMultipleLights((error, response) => {
     if (error) {
-      console.error(error);
+      console.log("HEY JOE IN ERROR SECTION");
+      // console.error(error);
     } else {
-      console.log(response.confirmationMessage);
+      if (fromGUI) {
+        return response.confirmationMessage;
+      } else {
+        console.log(response.confirmationMessage);
+      }
     }
   });
   const brightness = parseInt(
@@ -93,23 +98,27 @@ const setMultipleLights = (inputId, inputBrightness, inputColor, fromGUI) => {
 
   let addMore = true;
   if (!fromGUI) {
-    console.log("HEY JOE IN LOOPR");
+    console.log("HEY JOE IN WHILE LOOP");
     while (addMore) {
       const id = parseInt(
         readline.question("Please enter a light ID to add to the list. \n")
       );
-      call.write(
-        { id, brightness, color } || { inputId, inputBrightness, inputColor }
-      );
+      call.write({ id, brightness, color });
       addMore = readline.keyInYNStrict("Add another? \n");
     }
+    call.end();
   } else {
-    inputId
-      .split(",")
-      .forEach((item = call.write({ item, inputBrightness, inputColor })));
+    console.log("HEY JOE IN FOREACH LOOP");
+    const ids = inputId.split(",");
+    for (i = 0; i < ids.length; i++) {
+      call.write({
+        id: ids[i],
+        brightness: inputBrightness,
+        color: inputColor,
+      });
+    }
     call.end();
   }
-  call.end();
 };
 
 function mainMenu() {

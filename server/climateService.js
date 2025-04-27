@@ -29,6 +29,7 @@ function delay(ms) {
 }
 
 const initiateClimateReadings = async (call) => {
+  console.log("HEY JOE FUNCTION WAS CALLED");
   for (i = 0; i < readings.length; i++) {
     const climateReading = readings[i];
     await delay(3000);

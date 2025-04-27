@@ -24,31 +24,25 @@ router.post("/", (req, res) => {
   console.log(req.body.inputColor);
   console.log(fromGUI);
   client.loadService(lightService, (lightService) => {
-    console.log(lightService);
+    console.log(lightService.address);
     if (!lightService) {
       res.send("Light Service not found.");
       return;
     }
     client.setMultipleLights(
-      inputId,
-      inputBrightness,
-      inputColor,
-      fromGUI,
+      { inputId, inputBrightness, inputColor, fromGUI },
       (response) => {
         if (!response) {
           res.send("Light not found.");
           return;
         }
-        res.render(
-          "lightSystem/setMultipleLights",
-          {
-            inputId: inputId,
-            inputBrightness: inputBrightness,
-            inputColor: inputColor,
-            fromGUI: fromGUI,
-          },
-          { response: response }
-        );
+        res.render("lightSystem/setMultipleLights", {
+          inputId,
+          inputBrightness,
+          inputColor,
+          fromGUI,
+          response,
+        });
       }
     );
   });
