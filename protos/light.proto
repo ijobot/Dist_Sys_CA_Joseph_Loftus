@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package light;
 
-// Unary, Server-side, and Client-side Service
+// Unary, Server-Streaming, and Client-Streaming Service
 // Service that accepts requests based on various lighting functionality.
 
 service LightService {
@@ -10,10 +10,10 @@ service LightService {
     rpc GetLight(LightRequest) returns (LightResponse);
     rpc SetLight(SetLightRequest) returns (SetLightResponse);
 
-    // Server-side function:
+    // Server-Streaming function:
     rpc GetRoomLights(RoomLightsRequest) returns (stream RoomLightsResponse);
 
-    // Client-side function:
+    // Client-Streaming function:
     rpc SetMultipleLights(stream SetMultipleLightsRequest) returns (SetMultipleLightsResponse);
 }
 
@@ -47,7 +47,7 @@ message RoomLightsRequest{
     string room = 1;
 }
 
-// Service streams an array of all Light items in the given room.
+// Service emits a stream of all lights in the given room.
 message RoomLightsResponse{
     uint32 id = 1;
     string room = 2;
@@ -55,7 +55,7 @@ message RoomLightsResponse{
     string color = 4;
 }
 
-// User inputs several lights to update at once.
+// User inputs a stream of lights to update at once.
 message SetMultipleLightsRequest{
     uint32 id = 1;
     uint32 brightness = 2;

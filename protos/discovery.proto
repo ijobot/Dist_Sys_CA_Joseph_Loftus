@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package discovery;
 
-// Control Service
-// Will inject and initiate other services within the system.
+// Unary Service - Control Service
+// Will locate and initiate other services available within the system.
 
 service DiscoveryService{
     rpc LoadService(ServiceRequest) returns (ServiceResponse);

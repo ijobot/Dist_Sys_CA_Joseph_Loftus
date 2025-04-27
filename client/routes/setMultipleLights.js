@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const client = require("../mainClient");
 
+// Establish the router for the setMultipleLights function and its display page.
 router.get("/", (req, res) => {
   res.render("lightSystem/setMultipleLights", {
     inputId: 1,
@@ -19,10 +20,7 @@ router.post("/", (req, res) => {
   const inputColor = req.body.inputColor;
   const fromGUI = true;
 
-  console.log(req.body.inputId);
-  console.log(req.body.inputBrightness);
-  console.log(req.body.inputColor);
-  console.log(fromGUI);
+  // Use the DiscoveryService to find and load the LightService for use in the UI.
   client.loadService(lightService, (lightService) => {
     console.log(lightService.address);
     if (!lightService) {

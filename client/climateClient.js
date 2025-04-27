@@ -6,11 +6,13 @@ const CLIMATE_PROTO_PATH = path.join(__dirname, "../protos/climate.proto");
 const definition = protoLoader.loadSync(CLIMATE_PROTO_PATH);
 const climateProto = grpc.loadPackageDefinition(definition).climate;
 
+// Creating the client and loading the proto.
 const client = new climateProto.ClimateService(
   "localhost:50051",
   grpc.credentials.createInsecure()
 );
 
+// Client functionality for the Climate Service.
 const initiateClimateReadings = () => {
   const requestMessage = "Begin streaming today's weather readings.";
   const call = client.initiateClimateReadings({ message: requestMessage });
@@ -30,6 +32,7 @@ const initiateClimateReadings = () => {
   });
 };
 
+// Function call to trigger the climate readings.
 initiateClimateReadings();
 
 module.exports = {

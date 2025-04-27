@@ -7,17 +7,21 @@ const SECURITY_PROTO_PATH = path.join(__dirname, "../protos/security.proto");
 const definition = protoLoader.loadSync(SECURITY_PROTO_PATH);
 const securityProto = grpc.loadPackageDefinition(definition).security;
 
+// Creating the client and loading the proto.
 const client = new securityProto.SecurityService(
   "localhost:50053",
   grpc.credentials.createInsecure()
 );
 
+// Client functionality for the Security Service.
 const securityClearance = () => {
+  // Create the interface for users to type their choices/responses.
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
 
+  // When recieving call data, print out in readable fashion and increase the currentAction value by 1.
   const call = client.securityClearance();
   call.on("data", (response) => {
     console.log(`
@@ -37,10 +41,12 @@ const securityClearance = () => {
 
   let currentAction = 1;
 
+  // Initialising prompt to start bidirectional communication.
   console.log(
-    "SECURITY - DESK WELCOME: Please type your full name, or 'Q' to quit. "
+    "SECURITY DESK - WELCOME: Please type your full name, or 'Q' to quit. "
   );
 
+  // Series of questions and answers streamed from both the Server-side and Client-side.
   rl.on("line", (enteredText) => {
     if (enteredText.toLowerCase() === "q") {
       call.end();

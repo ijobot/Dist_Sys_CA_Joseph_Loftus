@@ -7,20 +7,23 @@ const LIGHT_PROTO_PATH = path.join(__dirname, "../protos/light.proto");
 const definition = protoLoader.loadSync(LIGHT_PROTO_PATH);
 const lightProto = grpc.loadPackageDefinition(definition).light;
 
+// Creating the client and loading the proto.
 const client = new lightProto.LightService(
   "localhost:50052",
   grpc.credentials.createInsecure()
 );
 
+// Client functionality for the Light Service.
 const getLight = (inputId) => {
+  // Prompt user to enter a light ID for lookup.
   const lightId = readline.question(
     "Please enter a Light ID to see its details: \n"
   );
   client.getLight({ id: inputId || lightId }, (error, response) => {
     if (error) {
-      // console.error("Error:", error);
+      console.log("Error in getLight function within the lightClient.", error);
     } else {
-      console.log(response);
+      // Display light details for the user.
       console.log(
         `
           DETAILS FOR LIGHT ${response.id}
@@ -29,18 +32,22 @@ const getLight = (inputId) => {
           color:         ${response.color}
           `
       );
+      // Return light details object for use/display in the ejs file.
       return response;
     }
   });
 };
 
 const setLight = () => {
+  // Prompt user to enter a light ID to update.
   const lightToSet = parseInt(
     readline.question("Which light would you like to update? \n")
   );
+  // Prompt user to enter a brightness setting.
   const setBrightness = parseInt(
     readline.question("Please enter a brightness setting from 1-100: \n")
   );
+  // Prompt user to enter a color setting.
   const setColor = readline.question("Please enter the color setting: \n");
   client.setLight(
     {
@@ -50,8 +57,12 @@ const setLight = () => {
     },
     (error, response) => {
       if (error) {
-        console.error("Error:", error);
+        console.log(
+          "Error in setLight function within the lightClient.",
+          error
+        );
       } else {
+        // Send user confirmation message with new settings.
         console.log(
           `
           ${response.confirmationMessage}
@@ -63,11 +74,14 @@ const setLight = () => {
 };
 
 const getRoomLights = () => {
+  // Prompt user to enter a room to check which lights are located within.
   const roomResponse = readline.question(
     "Enter a room to see which lights are available: \n"
   );
   const call = client.getRoomLights({ room: roomResponse });
+  // Initial printout to begin the sequence.
   console.log(`\nThe following lights are in room "${roomResponse}":`);
+  // Each light is printed in succession as the stream of emissions is recieved.
   call.on("data", (light) => {
     console.log(`${light.id}`);
   });
@@ -77,38 +91,48 @@ const getRoomLights = () => {
 const setMultipleLights = (inputId, inputBrightness, inputColor, fromGUI) => {
   const call = client.setMultipleLights((error, response) => {
     if (error) {
-      console.log("HEY JOE IN ERROR SECTION");
-      // console.error(error);
+      console.log(
+        "Error in setMultipleLights function within the lightClient.",
+        error
+      );
     } else {
+      // "fromGUI" is an additional argument sent through the function depending on whether the user is using the browser or the terminal.
       if (fromGUI) {
-        return response.confirmationMessage;
+        // Response object if in browser.
+        return response;
       } else {
+        // Printout if in terminal.
         console.log(response.confirmationMessage);
       }
     }
   });
+  // Prompt user to set a brightness for all lights to be updated.
   const brightness = parseInt(
     readline.question(
       "Please enter a brightness setting from 1-100 for multiple lights: \n"
     )
   );
+  // Prompt user to set a color for all lights to be updated.
   const color = readline.question(
     "Please enter a color setting for multiple lights: \n"
   );
 
   let addMore = true;
   if (!fromGUI) {
-    console.log("HEY JOE IN WHILE LOOP");
+    // If using terminal, prompt user to enter a single light ID.
+    // Then user types "y" to continue adding more, thus Client-Streaming values to the server.
     while (addMore) {
       const id = parseInt(
         readline.question("Please enter a light ID to add to the list. \n")
       );
       call.write({ id, brightness, color });
+      // While loop continues until "addMore" becauses false by user typing "n".
       addMore = readline.keyInYNStrict("Add another? \n");
     }
     call.end();
   } else {
-    console.log("HEY JOE IN FOREACH LOOP");
+    // If in browser, user is asked to enter all desired IDs in comma-separated fashion.
+    // These IDs are split and Client-Streamed as individual emissions.
     const ids = inputId.split(",");
     for (i = 0; i < ids.length; i++) {
       call.write({
@@ -121,6 +145,7 @@ const setMultipleLights = (inputId, inputBrightness, inputColor, fromGUI) => {
   }
 };
 
+// Main menu functionality for terminal users.
 function mainMenu() {
   console.log(
     `
@@ -133,6 +158,7 @@ function mainMenu() {
   );
   const choice = parseInt(readline.question("Choose a function: \n"));
 
+  // Switch statement to allow user to select any of the 4 functions, or to exit the program.
   switch (choice) {
     case 1:
       getLight();
@@ -149,8 +175,16 @@ function mainMenu() {
     case 5:
       return;
     default:
-      console.log("Please choose a function from 1 to 4.");
+      console.log("Please choose a function from 1 to 5.");
   }
 }
 
+// Function call to trigger opening menu.
 mainMenu();
+
+module.exports = {
+  getLight,
+  getRoomLights,
+  setLight,
+  setMultipleLights,
+};

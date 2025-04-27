@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package climate;
 
-// Server-side Service
-// Will emit a stream of weather conditions every 30 minutes to update the internal office climate.
+// Server-Streaming Service
+// Will emit a stream of weather conditions every hour to dynamically adjust the internal office climate.
 
 service ClimateService{
     rpc InitiateClimateReadings(ClimateRequest) returns (stream ClimateResponse);
@@ -14,7 +14,7 @@ message ClimateRequest{
     string message = 1;
 }
 
-// Service receives a continuous stream of local temperature and humidity readings and controls the office climate accordingly. 
+// Service receives a continuous stream of local temperature and humidity readings. 
 message ClimateResponse{
     string time = 1;
     uint32 temperature = 2;

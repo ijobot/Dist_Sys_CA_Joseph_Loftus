@@ -6,7 +6,7 @@ const LIGHT_PROTO_PATH = path.join(__dirname, "../protos/light.proto");
 const definition = protoLoader.loadSync(LIGHT_PROTO_PATH);
 const lightProto = grpc.loadPackageDefinition(definition).light;
 
-// Array of lights positioned in various rooms throughout the office.
+// Emulating a lightmap database (would be hosted in Mongo or SQL in a real world scenario).
 const lights = [
   { id: 1, room: "conference", brightness: 100, color: "bright white" },
   { id: 2, room: "conference", brightness: 100, color: "bright white" },
@@ -30,13 +30,17 @@ const lights = [
   { id: 20, room: "elevator", brightness: 60, color: "warm yellow" },
 ];
 
-// Function to access any light by its ID.
+// --------------------------
+// Main Light System function
+// Unary Service
+// --------------------------
+
+// Function makes a single call and returns a light object as a response.
 const getLight = (call, callback) => {
   const light = lights.find((light) => light.id === call.request.id);
   if (light) {
     callback(null, light);
   } else {
-    console.log("HEY JOE ERROR FROM LIGHTSERVICE");
     callback({
       code: grpc.status.NOT_FOUND,
       details: "Light not found.",
@@ -44,7 +48,7 @@ const getLight = (call, callback) => {
   }
 };
 
-// Function to change the settings of a particular light.
+// Function makes a single call with settings and then confirms via response.
 const setLight = (call, callback) => {
   const light = lights.find((light) => light.id === call.request.id);
   if (light) {
@@ -57,7 +61,6 @@ const setLight = (call, callback) => {
     `;
     callback(null, { confirmationMessage });
   } else {
-    console.log("HEY JOE ERROR FROM LIGHTSERVICE");
     callback({
       code: grpc.status.NOT_FOUND,
       details: "There was a problem.  Light has not been set.",
@@ -65,7 +68,12 @@ const setLight = (call, callback) => {
   }
 };
 
-// Function to get all the lights in a particular room.
+// --------------------------
+// Main Light System function
+// Server-Streaming Service
+// --------------------------
+
+// Function makes a single call using a room argument and returns a stream of lights in that room.
 const getRoomLights = (call) => {
   lights.forEach((light) => {
     if (light.room === call.request.room) {
@@ -75,23 +83,23 @@ const getRoomLights = (call) => {
   call.end();
 };
 
-// Function to enter a single brightness setting and single color setting, and then apply those settings across multiple lights in multiple rooms.
+// --------------------------
+// Main Light System function
+// Client-Streaming Service
+// --------------------------
+
+// Function makes multiple calls with settings data and then responds with a single confirmation.
 const setMultipleLights = (call, callback) => {
-  console.log("HEY JOE FUNCTION WAS CALLED");
   const lightsToSet = [];
   let setBrightness = 0;
   let setColor = "white";
 
   call.on("data", ({ id, brightness, color }) => {
-    console.log("HEY JOE RECIEVED DATA");
-    console.log({ id, brightness, color });
     lightsToSet.push(id);
     setBrightness = brightness;
     setColor = color;
   });
   call.on("end", () => {
-    console.log("HEY JOE ENDING CALL");
-
     const confirmationMessage = `Lights [${lightsToSet.join(
       " "
     )}] have all been set to brightness: ${setBrightness} and color: ${setColor.toUpperCase()}.`;
@@ -99,6 +107,7 @@ const setMultipleLights = (call, callback) => {
   });
 };
 
+// Creating the server and adding the Light Service via the proto file.
 const server = new grpc.Server();
 server.addService(lightProto.LightService.service, {
   GetLight: getLight,
@@ -107,6 +116,7 @@ server.addService(lightProto.LightService.service, {
   SetMultipleLights: setMultipleLights,
 });
 
+// Choosing and assigning a port for the service.
 const PORT = "50052";
 server.bindAsync(
   `localhost:${PORT}`,

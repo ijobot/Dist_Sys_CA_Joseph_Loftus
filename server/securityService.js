@@ -6,6 +6,7 @@ const SECURITY_PROTO_PATH = path.join(__dirname, "../protos/security.proto");
 const definition = protoLoader.loadSync(SECURITY_PROTO_PATH);
 const securityProto = grpc.loadPackageDefinition(definition).security;
 
+// Emulating an employee/user database (would be hosted in Mongo or SQL in a real world scenario).
 const users = [
   { name: "Security Desk", empID: 1111 },
   { name: "Shane Gillern", empID: 2222 },
@@ -17,6 +18,11 @@ const users = [
   { name: "Tyrese Maxey", empID: 8888 },
   { name: "Bryce Harper", empID: 9999 },
 ];
+
+// -----------------------------
+// Main Security System function
+// Bidirectional Service
+// -----------------------------
 
 const securityClearance = (call) => {
   const secDesk = "SECURITY DESK";
@@ -40,22 +46,29 @@ const securityClearance = (call) => {
       correspondence.user.toString().toLowerCase() ===
       secretPiece.toLowerCase();
 
+    // When they type their name in (real world would involve swiping an ID badge), the system asks them to confirm thier employee ID.
+    // This is the first back-and-forth.
     if (correspondence.action.toString() === "sign in" && onList) {
       call.write({
         user: secDesk,
         action: "ID VERIFY:",
         message: confirmMessage,
       });
+      // Once they have entered their ID and it has been checked, the system asks them for a secret password.
+      // This is the second back-and-forth.
     } else if (correspondence.action.toString() === "verify" && empMatch) {
       call.write({
         user: secDesk,
         action: "FINAL CHECK:",
         message: secretQuestion,
       });
+      // Once they have entered the secret password, the system either allows them in or denies them entry.
+      // This is the final back-and-forth.
     } else if (
       correspondence.action.toString() === "secret piece" &&
       secretAnswer
     ) {
+      // Authorizing call
       call.write({
         user: secDesk,
         action: "AUTHORIZED:",
@@ -63,6 +76,7 @@ const securityClearance = (call) => {
       });
       call.end();
     } else {
+      // Refusal call
       call.write({
         user: secDesk,
         action: "REFUSE:",
@@ -81,11 +95,13 @@ const securityClearance = (call) => {
   });
 };
 
+// Creating the server and adding the Security Service via the proto file.
 const server = new grpc.Server();
 server.addService(securityProto.SecurityService.service, {
   SecurityClearance: securityClearance,
 });
 
+// Choosing and assigning a port for the service.
 const PORT = "50053";
 server.bindAsync(
   `localhost:${PORT}`,

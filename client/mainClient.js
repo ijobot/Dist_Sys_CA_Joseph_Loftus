@@ -4,7 +4,7 @@ const path = require("path");
 const readlineSync = require("readline-sync");
 const readline = require("readline");
 
-// Discovery
+// Discovery proto load and client creation
 const DISCOVERY_PROTO_PATH = path.join(__dirname, "../protos/discovery.proto");
 const discoveryProto = grpc.loadPackageDefinition(
   protoLoader.loadSync(DISCOVERY_PROTO_PATH)
@@ -14,7 +14,7 @@ const discoveryClient = new discoveryProto.DiscoveryService(
   grpc.credentials.createInsecure()
 );
 
-// Climate
+// Climate proto load and client creation
 const CLIMATE_PROTO_PATH = path.join(__dirname, "../protos/climate.proto");
 const climateProto = grpc.loadPackageDefinition(
   protoLoader.loadSync(CLIMATE_PROTO_PATH)
@@ -24,7 +24,7 @@ const climateClient = new climateProto.ClimateService(
   grpc.credentials.createInsecure()
 );
 
-// Light
+// Light proto load and client creation
 const LIGHT_PROTO_PATH = path.join(__dirname, "../protos/light.proto");
 const lightProto = grpc.loadPackageDefinition(
   protoLoader.loadSync(LIGHT_PROTO_PATH)
@@ -34,7 +34,7 @@ const lightClient = new lightProto.LightService(
   grpc.credentials.createInsecure()
 );
 
-// Security
+// Security proto load and client creation
 const SECURITY_PROTO_PATH = path.join(__dirname, "../protos/security.proto");
 const securityProto = grpc.loadPackageDefinition(
   protoLoader.loadSync(SECURITY_PROTO_PATH)
@@ -50,7 +50,7 @@ const loadService = (serviceName, callback) => {
     { serviceName: serviceName },
     (error, response) => {
       if (error) {
-        console.log("Could not discover service.", error);
+        console.log("Error :: loadService function :: mainClient file", error);
         callback(null);
       } else {
         callback(response);
@@ -59,11 +59,14 @@ const loadService = (serviceName, callback) => {
   );
 };
 
-// Climate client function
+// Climate functionality
 const initiateClimateReadings = () => {
   climateClient.initiateClimateReadings((error, response) => {
     if (error) {
-      console.log("Error initiating climate readings.", error);
+      console.log(
+        "Error :: initiateClimateReadings function :: mainClient file ",
+        error
+      );
       callback(null);
     } else {
       callback(response);
@@ -71,11 +74,11 @@ const initiateClimateReadings = () => {
   });
 };
 
-// Light client functions
+// Light functionality
 const getLight = (lightId, callback) => {
   lightClient.getLight({ id: lightId }, (error, response) => {
     if (error) {
-      console.log("Error getting light by ID", error);
+      console.log("Error :: getLight function :: mainClient file", error);
       callback(null);
     } else {
       callback(response);
@@ -88,7 +91,10 @@ const setMultipleLights = (inputId, inputBrightness, inputColor, fromGUI) => {
     { inputId, inputBrightness, inputColor, fromGUI },
     (error, response) => {
       if (error) {
-        console.log("Error getting light by ID", error);
+        console.log(
+          "Error :: setMultipleLights function :: mainClient file",
+          error
+        );
         callback(null);
       } else {
         callback(response);
@@ -97,9 +103,25 @@ const setMultipleLights = (inputId, inputBrightness, inputColor, fromGUI) => {
   );
 };
 
+// Security functionality
+const securityClearance = () => {
+  securityClient.securityClearance((error, response) => {
+    if (error) {
+      console.log(
+        "Error :: securityClearance function :: mainClient file ",
+        error
+      );
+      callback(null);
+    } else {
+      callback(response);
+    }
+  });
+};
+
 module.exports = {
   loadService,
   getLight,
   setMultipleLights,
   initiateClimateReadings,
+  securityClearance,
 };
