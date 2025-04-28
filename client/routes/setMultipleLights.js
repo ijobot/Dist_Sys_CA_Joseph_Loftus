@@ -1,20 +1,28 @@
 const express = require("express");
 const router = express.Router();
 const client = require("../mainClient");
+const lightService = "lightService";
 
 // Establish the router for the setMultipleLights function and its display page.
 router.get("/", (req, res) => {
-  res.render("lightSystem/setMultipleLights", {
-    inputId: "1,4,8,9",
-    inputBrightness: 90,
-    inputColor: "soft white",
-    keepGoing: "y",
-    response: {},
+  client.loadService(lightService, (lightService) => {
+    console.log(lightService.address);
+    if (!lightService) {
+      res.send("Light Service not found.");
+      return;
+    }
+    res.render("lightSystem/setMultipleLights", {
+      inputId: "1,4,8,9",
+      inputBrightness: 90,
+      inputColor: "soft white",
+      keepGoing: "y",
+      response: {},
+      address: lightService.address,
+    });
   });
 });
 
 router.post("/", (req, res) => {
-  const lightService = "lightService";
   const inputId = req.body.inputId;
   const inputBrightness = req.body.inputBrightness;
   const inputColor = req.body.inputColor;
@@ -40,6 +48,7 @@ router.post("/", (req, res) => {
           inputColor,
           fromGUI,
           response,
+          address: lightService.address,
         });
       }
     );

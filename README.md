@@ -55,7 +55,7 @@ When asked to enter a location for the "getLocationLights" function, users can e
 The security system is a 2-way messaging portal that employees use to either enter the building in the morning, or to sign into the systems remotely.  Employees enter thier name first, then are asked to confirm their employee ID number, and finally are asked to give a secret code that changes monthly.
 All messages back and forth and encrypted using a secretKey.
 
-Launching the securityClient will automatically start the vetting process.
+Launching the securityClient will automatically start the vetting process.  All questions and answers between the Security Desk and the Employee are encrypted.  Each step will log 2 things to the console: first, the encrypted string to show proof the the cryptography is functioning properly, and second, the decrypted string only on the receiving side.
 
 When responding to the 3 questions, users can use the following test data:
 **name:** Kate Scott

@@ -29,7 +29,7 @@ const users = [
 const encryptBeforeSend = (message, secretKey) => {
   return crypto.AES.encrypt(message, secretKey).toString();
 };
-const decryptOnRecieve = (cipherText, secretKey) => {
+const decryptOnReceive = (cipherText, secretKey) => {
   let bytes = crypto.AES.decrypt(cipherText, secretKey);
   return bytes.toString(crypto.enc.Utf8);
 };
@@ -46,7 +46,7 @@ const securityClearance = (call) => {
 
   call.on("data", (correspondence) => {
     console.log(correspondence.message);
-    const decryptedText = decryptOnRecieve(correspondence.message, secretKey);
+    const decryptedText = decryptOnReceive(correspondence.message, secretKey);
     console.log(`${decryptedText} \n`);
 
     const onList = users.find(

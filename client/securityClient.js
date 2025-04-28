@@ -18,7 +18,7 @@ const client = new securityProto.SecurityService(
 const encryptBeforeSend = (message, secretKey) => {
   return crypto.AES.encrypt(message, secretKey).toString();
 };
-const decryptOnRecieve = (cipherText, secretKey) => {
+const decryptOnReceive = (cipherText, secretKey) => {
   let bytes = crypto.AES.decrypt(cipherText, secretKey);
   return bytes.toString(crypto.enc.Utf8);
 };
@@ -32,7 +32,7 @@ const securityClearance = () => {
     output: process.stdout,
   });
 
-  // When recieving call data, print out in readable fashion and increase the currentAction value by 1.
+  // When receiving call data, print out in readable fashion and increase the currentAction value by 1.
   const call = client.securityClearance();
   call.on("data", (response) => {
     console.log(response.message);
@@ -41,7 +41,7 @@ const securityClearance = () => {
         ${response.user} - ${response.action} ${response.message}
         `);
     } else {
-      const decryptedMessage = decryptOnRecieve(response.message, secretKey);
+      const decryptedMessage = decryptOnReceive(response.message, secretKey);
       console.log(`
       ${response.user} - ${response.action} ${decryptedMessage}
       `);
@@ -65,7 +65,7 @@ const securityClearance = () => {
 
   // Initialising prompt to start bidirectional communication.
   console.log(
-    "SECURITY DESK - WELCOME: Please type your full name, or 'Q' to quit. "
+    "\nSECURITY DESK - WELCOME: Please type your full name, or 'Q' to quit. "
   );
 
   // Series of questions and answers streamed from both the Server-side and Client-side.

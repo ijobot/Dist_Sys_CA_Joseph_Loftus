@@ -41,6 +41,10 @@
         </div>
         <% } %>
       </div>
+      <div class="flex row">
+        <p><strong>Security Service Address:&nbsp;</strong></p>
+        <p><%= address %></p>
+      </div>
     </div>
   </body>
   <style>
@@ -64,6 +68,11 @@
       flex-direction: column;
       gap: 20px;
       width: min-content;
+    }
+    .row {
+      flex-direction: row;
+      width: max-content;
+      gap: 0;
     }
   </style>
 </html>

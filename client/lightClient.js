@@ -78,7 +78,7 @@ const getLocationLights = () => {
   const call = client.getLocationLights({ location: locationResponse });
   // Initial printout to begin the sequence.
   console.log(`\nThe following lights are in location "${locationResponse}":`);
-  // Each light is printed in succession as the stream of emissions is recieved.
+  // Each light is printed in succession as the stream of emissions is received.
   call.on("data", (light) => {
     console.log(`${light.id}`);
   });

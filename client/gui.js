@@ -1,6 +1,5 @@
 const express = require("express");
 const path = require("path");
-const client = require("./mainClient");
 
 // Importing the routers for each page within the system.
 const getLightRouter = require("./routes/getLight");
@@ -36,7 +35,15 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+const testFunction = () => {
+  console.log("hey joe the button worked");
+};
+
 // Listening to the assigned port for functionality.
 app.listen(PORT, () => {
   console.log(`Client GUI is running at http://localhost:${PORT}`);
 });
+
+module.exports = {
+  testFunction,
+};
